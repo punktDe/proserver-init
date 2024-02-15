@@ -1,0 +1,289 @@
+#!/usr/bin/env python3
+import os
+import difflib
+from pathlib import Path
+
+project = os.path.basename(os.getcwd()).replace("-infrastructure", "")
+readme = """\
+# {1}
+
+### Preparing your system
+```sh
+brew install direnv bitwarden-cli pre-commit
+bw config server pass.punkt.de
+bw login
+echo 'export BW_SESSION="your-session-key" >> ~/.zshrc'
+source ~/.zshrc
+```
+
+### Cloning the repository
+```sh
+git clone git@git.punkt.de:{0}/{1}.git ~/Workspace/Projects/{1}
+cd ~/Workspace/Projects/{1}
+```
+
+### Installing the dependencies
+```sh
+direnv allow
+```
+
+### Enabling linting and pre-commit checks
+```sh
+pre-commit install
+```
+
+### Run Ansible playbook
+```sh
+ansible-playbook {0}.yaml --limit staging
+""".format(project, os.path.basename(os.getcwd()), os.getcwd())
+
+
+
+envrc = """\
+#!/bin/sh
+set -e
+
+if [ ! -f venv-{0}/bin/activate ]
+then
+	echo "Creating a virtual Python environment"
+	python3 -m venv venv-{0} >/dev/null
+fi
+
+if [ -f venv-{0}/bin/activate ]
+then
+	echo "Activating the Python virtual environment"
+	. venv-{0}/bin/activate
+fi
+
+if [ -f venv-{0}/bin/pip3 ]
+then
+	echo "Installing Python requirements"
+	venv-{0}/bin/pip3 install --upgrade pip 1> /dev/null
+	venv-{0}/bin/pip3 install -r requirements.txt 1> /dev/null
+fi
+
+# Install Ansible roles
+if ! [ -d "roles/system" ]; then
+    echo "Installing Ansible roles"
+    ansible-galaxy install -r requirements.yml
+    break
+fi
+""".format(project)
+
+requirements_yml = """\
+collections:
+  - name: https://github.com/ansible-collections/community.general
+    type: git
+  - name: https://github.com/ansible-collections/community.crypto
+    type: git
+  - name: https://github.com/ansible-collections/ansible.posix
+    type: git
+
+roles:
+  - name: dehydrated
+    src: https://github.com/punktDe/ansible-proserver-dehydrated
+  - name: nginx
+    src: https://github.com/punktDe/ansible-proserver-nginx
+  - name: system
+    src: https://github.com/punktDe/ansible-proserver-system
+"""
+
+requirements_txt = """\
+ansible>8.2.0
+requests
+zabbix-api
+ansible-lint
+PyYAML
+"""
+
+ansible_lint = """\
+---
+skip_list:
+  - meta-no-info
+  - var-naming[no-role-prefix]
+
+warn_list:
+  - package-latest
+  - unnamed-task
+
+exclude_paths:
+  - group_vars/secrets.*
+  - roles/dehydrated
+  - roles/mailhog
+  - roles/postgresql
+  - roles/mail
+  - roles/mariadb
+  - roles/nginx
+  - roles/elasticsearch
+  - roles/oauth2_proxy
+  - roles/php
+  - roles/redis
+  - roles/supervisord
+  - roles/system
+  - roles/apache
+  - roles/solr
+"""
+
+yamllint="""\
+---
+extends: default
+
+rules:
+  line-length: disable
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no']
+  comments:
+    min-spaces-from-content: 1
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+ignore: |
+  .cache
+"""
+
+precommit="""\
+---
+repos:
+- repo: https://github.com/ansible/ansible-lint.git
+  rev: v24.2.0
+  hooks:
+    - id: ansible-lint
+      files: \.(yaml|yml)$
+"""
+
+ansible_cfg = """\
+[defaults]
+hash_behaviour = merge
+inventory = inventory.ini,inventory.py
+vault_password_file = vault_password_file
+roles_path = ./roles
+
+gathering = smart
+fact_caching = jsonfile
+fact_caching_connection = .fact_cache
+fact_caching_timeout = 43200
+
+; The TRANSFORM_INVALID_GROUP_CHARS setting is set to
+; allow bad characters in group names by default, this will change in version 2.10.
+; This option can be removed once version 2.10 is used.
+force_valid_group_names = always
+
+forks = 32
+
+#strategy_plugins = /usr/local/lib/python3.8/dist-packages/ansible_mitogen/plugins/strategy
+#strategy = mitogen_linear
+
+[ssh_connection]
+pipelining = true
+ssh_args = -C -o ControlMaster=auto -o ControlPersist=60s
+"""
+
+vault_password_file = """\
+#! /bin/sh
+bw sync > /dev/null 2>&1
+bw get password ''
+"""
+
+gitignore = """\
+.DS_Store
+*.pyc
+__pycache__
+.idea
+.vscode
+/*.retry
+/.fact_cache
+/venv/
+debug.log
+id_ed25519*
+/venv*/
+roles/apache
+roles/dehydrated
+roles/elasticsearch
+roles/mail
+roles/mailhog
+roles/mariadb
+roles/nginx
+roles/oauth2_proxy
+roles/php
+roles/postgresql
+roles/redis
+roles/solr
+roles/supervisord
+roles/system
+roles/zabbix_agent
+"""
+
+def diff(string_list, index_a=0, index_b=None, print_only=True):
+    """
+    Print or return a colour-coded diff of two items in a list of strings.
+    Default: Compare first and last strings; print the output; return None.
+    """
+    index_b = index_b or len(string_list) -1
+    green = '\x1b[38;5;16;48;5;2m'
+    red = '\x1b[38;5;16;48;5;1m'
+    end = '\x1b[0m'
+    output = []
+    string_a = string_list[index_a]
+    string_b = string_list[index_b]
+    matcher = difflib.SequenceMatcher(None, string_a, string_b)
+    for opcode, a0, a1, b0, b1 in matcher.get_opcodes():
+        if opcode == "equal":
+            output += [string_a[a0:a1]]
+        elif opcode == "insert":
+            output += [green + string_b[b0:b1] + end]
+        elif opcode == "delete":
+            output += [red + string_a[a0:a1] + end]
+        elif opcode == "replace":
+            output += [green + string_b[b0:b1] + end]
+            output += [red + string_a[a0:a1] + end]
+    output = "".join(output)
+    if not print_only:
+        return output
+    print(f"\n{output}\n")
+
+
+def write_config(contents, filepath):
+    fullpath = os.path.join(os.getcwd(), filepath)
+    if os.path.isfile(fullpath):
+        with open(fullpath, "r+") as targetfile:
+            fcontents = targetfile.read()
+        if fcontents != contents:
+            diff([fcontents, contents])
+            replace = None
+            print("Replace the file {}? (y/n/a)".format(fullpath))
+            while replace not in ("y", "n", "a"):
+                if replace == "a":
+                    with open(fullpath, "w") as targetfile:
+                        targetfile.write(contents)
+                    break
+                else:
+                    replace = input()
+                if replace == "y":
+                    with open(fullpath, "w") as targetfile:
+                        targetfile.write(contents)
+                elif replace == "n":
+                    exit(0)
+                else:
+                    print("Please type either 'y' or 'n'")
+
+    else:
+        with open(fullpath, "w") as targetfile:
+            targetfile.write(contents)
+
+
+for i in ["roles", "group_vars"]:
+    Path(os.path.join(os.getcwd(), i)).mkdir(parents=True, exist_ok=True)
+    
+write_config(envrc, ".envrc")
+write_config(requirements_yml, "requirements.yml")
+write_config(requirements_txt, "requirements.txt")
+write_config(ansible_lint, ".ansible-lint")
+write_config(ansible_cfg, "ansible.cfg")
+write_config(yamllint, ".yamllint")
+write_config(precommit, ".pre-commit-config")
+write_config(gitignore, ".gitignore")
+write_config(vault_password_file, "vault_password_file")
+
+os.system('direnv allow')
+os.system('pre-commit install')
