@@ -2,6 +2,7 @@
 import os
 import difflib
 from pathlib import Path
+import jinja2
 
 project = os.path.basename(os.getcwd()).replace("-infrastructure", "")
 readme = """\
@@ -66,7 +67,6 @@ fi
 if ! [ -d "roles/system" ]; then
     echo "Installing Ansible roles"
     ansible-galaxy install -r requirements.yml
-    break
 fi
 """.format(project)
 
@@ -281,7 +281,7 @@ write_config(requirements_txt, "requirements.txt")
 write_config(ansible_lint, ".ansible-lint")
 write_config(ansible_cfg, "ansible.cfg")
 write_config(yamllint, ".yamllint")
-write_config(precommit, ".pre-commit-config")
+write_config(precommit, ".pre-commit-config.yaml")
 write_config(gitignore, ".gitignore")
 write_config(vault_password_file, "vault_password_file")
 
