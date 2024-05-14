@@ -2,7 +2,6 @@
 import os
 import difflib
 from pathlib import Path
-import jinja2
 
 project = os.path.basename(os.getcwd()).replace("-infrastructure", "")
 readme = """\
