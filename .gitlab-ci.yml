@@ -4,9 +4,7 @@ pages:
     - docker
   stage: deploy
   script:
-    - mkdir .public
-    - cp -r * .public
-    - mv .public public
+    - "mv files public"
   artifacts:
     paths:
       - public
