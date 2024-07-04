@@ -70,6 +70,7 @@ for i in ["roles", "group_vars"]:
     Path(os.path.join(os.getcwd(), i)).mkdir(parents=True, exist_ok=True)
     
 write_config(".envrc")
+write_config("inventory.py")
 write_config("requirements.yml")
 write_config("requirements.txt")
 write_config(".ansible-lint")
@@ -77,8 +78,9 @@ write_config("ansible.cfg")
 write_config(".yamllint")
 write_config(".pre-commit-config.yaml")
 write_config(".gitignore")
+write_config(".gitattributes")
 write_config("vault_password_file")
 
 os.system('direnv allow')
-os.system("git init --initial-branch main")
+os.system("git switch --create main")
 os.system('pre-commit install')
