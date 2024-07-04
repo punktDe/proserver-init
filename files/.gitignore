@@ -9,6 +9,7 @@ __pycache__
 debug.log
 id_ed25519*
 /venv*/
+.collections
 roles/apache
 roles/dehydrated
 roles/elasticsearch

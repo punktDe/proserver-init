@@ -6,7 +6,7 @@ from pathlib import Path
 
 project = os.path.basename(os.getcwd()).replace("-infrastructure", "")
 
-templates_url = "https://pt.punkt.io/ansible-init.punkt.app/files/"
+templates_url = "https://pt.punkt.io/ansible-init.punkt.app/"
 
 def diff(string_list, index_a=0, index_b=None, print_only=True):
     """
@@ -80,4 +80,5 @@ write_config(".gitignore")
 write_config("vault_password_file")
 
 os.system('direnv allow')
+os.system("git init --initial-branch main")
 os.system('pre-commit install')
