@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import os
+import re
 import difflib
 import requests
 from pathlib import Path
 
 project = os.path.basename(os.getcwd()).replace("-infrastructure", "")
 
-templates_url = "https://pt.punkt.io/ansible-init.punkt.app/"
+templates_url = "https://pt.punkt.io/ansible-init/"
 
 def diff(string_list, index_a=0, index_b=None, print_only=True):
     """
@@ -38,7 +39,10 @@ def diff(string_list, index_a=0, index_b=None, print_only=True):
 
 def write_config(filepath):
     reference = requests.get(templates_url + filepath).text
-    contents = reference.format(project, os.path.basename(os.getcwd()), os.getcwd())
+    if re.search(r'\{\d{,1}\}', reference):
+        contents = reference.format(project, os.path.basename(os.getcwd()), os.getcwd())
+    else:
+        contents = reference
     fullpath = os.path.join(os.getcwd(), filepath)
     if os.path.isfile(fullpath):
         with open(fullpath, "r+") as targetfile:
@@ -64,23 +68,17 @@ def write_config(filepath):
     else:
         with open(fullpath, "w") as targetfile:
             targetfile.write(contents)
-
+def list_files():
+    tree_raw = requests.get(templates_url + "tree").text.splitlines()[1:]
+    tree = [i[2:] for i in tree_raw]
+    tree.remove("tree")
+    return tree
 
 for i in ["roles", "group_vars"]:
     Path(os.path.join(os.getcwd(), i)).mkdir(parents=True, exist_ok=True)
     
-write_config(".envrc")
-write_config("inventory.py")
-write_config("requirements.yml")
-write_config("requirements.txt")
-write_config(".ansible-lint")
-write_config("ansible.cfg")
-write_config(".yamllint")
-write_config(".pre-commit-config.yaml")
-write_config(".gitignore")
-write_config(".gitattributes")
-write_config("vault_password_file")
+for config_file in list_files():
+    write_config(config_file)
 
 os.system('direnv allow')
-os.system("git switch --create main")
 os.system('pre-commit install')
