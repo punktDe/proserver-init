@@ -4,6 +4,9 @@ pages:
     - docker
   stage: deploy
   script:
+    - "cd files"
+    - "find -print > ./tree"
+    - "cd ../"
     - "mv files public"
   artifacts:
     paths:
