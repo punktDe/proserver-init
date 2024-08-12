@@ -5,7 +5,7 @@ class AnsibleInit < Formula
 
   head "git@git.punkt.de:pt/ansible-init.git", :using => :git, :branch => "main"
 
-  url "git@git.punkt.de:pt/ansible-init.git", :using => :git, :tag => "1.0.2"
+  url "git@git.punkt.de:pt/ansible-init.git", :using => :git, :tag => "1.1.0"
 
   depends_on "python@3"
 
