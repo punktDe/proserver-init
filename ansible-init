@@ -3,39 +3,15 @@ import os
 import re
 import difflib
 import requests
+import subprocess
 from pathlib import Path
 
 project = os.path.basename(os.getcwd()).replace("-infrastructure", "")
 
 templates_url = "https://pt.punkt.io/ansible-init/"
 
-def diff(string_list, index_a=0, index_b=None, print_only=True):
-    """
-    Print or return a colour-coded diff of two items in a list of strings.
-    Default: Compare first and last strings; print the output; return None.
-    """
-    index_b = index_b or len(string_list) -1
-    green = '\x1b[38;5;16;48;5;2m'
-    red = '\x1b[38;5;16;48;5;1m'
-    end = '\x1b[0m'
-    output = []
-    string_a = string_list[index_a]
-    string_b = string_list[index_b]
-    matcher = difflib.SequenceMatcher(None, string_a, string_b)
-    for opcode, a0, a1, b0, b1 in matcher.get_opcodes():
-        if opcode == "equal":
-            output += [string_a[a0:a1]]
-        elif opcode == "insert":
-            output += [green + string_b[b0:b1] + end]
-        elif opcode == "delete":
-            output += [red + string_a[a0:a1] + end]
-        elif opcode == "replace":
-            output += [green + string_b[b0:b1] + end]
-            output += [red + string_a[a0:a1] + end]
-    output = "".join(output)
-    if not print_only:
-        return output
-    print(f"\n{output}\n")
+def diff(file1, file2):
+    subprocess.run(["git", "diff", "--color-words", "--no-index", file1, file2])
 
 def write_config(filepath):
     reference = requests.get(templates_url + filepath).text
@@ -48,7 +24,7 @@ def write_config(filepath):
         with open(fullpath, "r+") as targetfile:
             fcontents = targetfile.read()
         if fcontents != contents:
-            diff([fcontents, contents])
+            diff(fcontents, contents)
             replace = None
             print("Replace the file {}? (y/n/a)".format(fullpath))
             while replace not in ("y", "n", "a"):
@@ -62,7 +38,7 @@ def write_config(filepath):
                     with open(fullpath, "w") as targetfile:
                         targetfile.write(contents)
                 elif replace == "n":
-                    exit(0)
+                    pass
                 else:
                     print("Please type either 'y' or 'n'")
     else:
