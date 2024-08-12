@@ -7,7 +7,7 @@ A simple script that sets up a Punkt.de Ansible project
 With Homebrew:
 ```
 brew tap pt/ansible-init git@git.punkt.de:pt/ansible-init.git
-brew install --HEAD ansible-init
+brew install ansible-init
 ```
 
 Without Homebrew:
