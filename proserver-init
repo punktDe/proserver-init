@@ -8,7 +8,7 @@ from pathlib import Path
 
 project = os.path.basename(os.getcwd()).replace("-infrastructure", "")
 
-templates_url = "https://pt.punkt.io/ansible-init/"
+templates_url = "https://pt.punkt.io/proserver-init/"
 
 def diff(file1, file2):
     subprocess.run(["git", "diff", "--color-words", "--no-index", file1, file2])
