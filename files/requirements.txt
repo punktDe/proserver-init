@@ -1,5 +1,0 @@
-ansible>8.2.0
-requests
-zabbix-api
-ansible-lint
-PyYAML

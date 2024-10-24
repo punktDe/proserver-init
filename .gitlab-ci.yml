@@ -4,10 +4,10 @@ pages:
     - docker
   stage: deploy
   script:
-    - "cd files"
+    - "cd templates"
     - "find -print > ./tree"
     - "cd ../"
-    - "mv files public"
+    - "mv templates public"
   artifacts:
     paths:
       - public
