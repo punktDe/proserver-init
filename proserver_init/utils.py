@@ -11,7 +11,7 @@ class Utils:
 
     @staticmethod
     def diff(file1, file2):
-        git_installed = subprocess.run(["which", "git"])
+        git_installed = subprocess.run(["which", "git"], stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL)
         if git_installed.returncode > 0:
             print("ERROR: git not installed")
             exit(1)

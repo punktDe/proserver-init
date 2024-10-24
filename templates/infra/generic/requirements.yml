@@ -1,0 +1,16 @@
+---
+collections:
+  - name: https://github.com/ansible-collections/community.general
+    type: git
+  - name: https://github.com/ansible-collections/community.crypto
+    type: git
+  - name: https://github.com/ansible-collections/ansible.posix
+    type: git
+
+roles:
+  - name: dehydrated
+    src: https://github.com/punktDe/ansible-proserver-dehydrated
+  - name: nginx
+    src: https://github.com/punktDe/ansible-proserver-nginx
+  - name: system
+    src: https://github.com/punktDe/ansible-proserver-system

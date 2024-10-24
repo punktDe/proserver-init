@@ -1,0 +1,31 @@
+# $project_name
+
+### Preparing your system
+```sh
+brew install direnv bitwarden-cli pre-commit
+bw config server pass.punkt.de
+bw login
+echo 'export BW_SESSION="your-session-key" >> ~/.zshrc'
+source ~/.zshrc
+```
+
+### Cloning the repository
+```sh
+git clone git@git.punkt.de:$project_organization/$project_name.git ~/Workspace/Projects/$project_name
+cd ~/Workspace/Projects/$project_name
+```
+
+### Installing the dependencies
+```sh
+direnv allow
+```
+
+### Enabling linting and pre-commit checks
+```sh
+pre-commit install
+```
+
+### Run Ansible playbook
+```sh
+ansible-playbook $project_organization.yaml --limit staging
+```

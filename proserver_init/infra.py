@@ -8,6 +8,7 @@ from .utils import Utils
 from pathlib import Path
 from .config_writer import ConfigWriter
 from .utils import Utils
+from .help_strings import infrastructure_success
 
 class InfraScaffolding:
     def init_project(self, from_path, to_path, flavor = "generic"):
@@ -28,3 +29,4 @@ class InfraScaffolding:
             "project_organization": project_organization
             }
         ConfigWriter(from_path, to_path, config, flavor).write_configs()
+        print(infrastructure_success.format(config['project_name']))

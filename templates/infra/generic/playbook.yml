@@ -1,0 +1,16 @@
+---
+- name: System
+  hosts: all
+  become: yes
+  tags:
+    - system
+  roles:
+    - system
+
+- name: App
+  hosts: app
+  become: yes
+  tags:
+    - app
+  roles:
+    - app

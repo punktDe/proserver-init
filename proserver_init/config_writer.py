@@ -1,6 +1,9 @@
 import os
 from string import Template
 from .utils import Utils
+import inquirer
+import tempfile
+from filecmp import cmp
 
 class ConfigWriter:
 
@@ -19,6 +22,28 @@ class ConfigWriter:
                 from_file = from_file_template.substitute(self.config)
             else:
                 from_file = ffile.read()
+        if os.path.exists(dest_path):
+            tmp_file = os.path.join(os.path.split(dest_path)[0], "." + os.path.split(dest_path)[1] + ".tmp")
+            with open(tmp_file, 'w') as f:
+                f.write(from_file)
+            if cmp(tmp_file, dest_path, shallow=False):
+                if os.path.exists(tmp_file):
+                    os.remove(tmp_file)
+                return
+            else:
+                while True:
+                    print(f"Replace the file {dest_path}? (yes/no/diff)")
+                    replace = input()
+                    if replace == "no":
+                        return
+                    if replace == "yes":
+                        break
+                    elif replace == "diff":
+                        self.utils.diff(tmp_file, dest_path)
+                        if os.path.exists(tmp_file):
+                            os.remove(tmp_file)
+                    else:
+                        print("Please type either 'yes', 'no' or 'diff'")
         with open(dest_path, "w+", encoding="utf-8") as dfile:
             dfile.write(from_file)
         self.utils.match_permissions(from_path, dest_path)
