@@ -4,7 +4,7 @@ class ProserverInit < Formula
   desc "A Python script that facilitates setting up a Punkt.de Ansible project"
   homepage "https://punkt.de"
 
-  head "git@git.punkt.de:pt/proserver-init.git", :using => :git, :branch => "rewrite"
+  head "git@git.punkt.de:pt/proserver-init.git", :using => :git, :branch => "main"
 
   url "git@git.punkt.de:pt/proserver-init.git", :using => :git, :tag => "2.0.0"
 
