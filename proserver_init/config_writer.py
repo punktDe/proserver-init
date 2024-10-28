@@ -15,6 +15,12 @@ class ConfigWriter:
         self.flavor = flavor
 
     def write_config(self, from_path: str, dest_path: str) -> None:
+        '''
+        Copies/templates the config to the target folder.
+        Checks if the config with the same already exists
+        in the target folder and gives the user
+        an option to overwrite or skip the file.
+        '''
         print(f"[bright_black]Templated {dest_path}[/bright_black]")
         with open(from_path, "r", encoding="utf-8") as ffile:
             if "template" in os.path.split(from_path)[1]:
@@ -50,6 +56,15 @@ class ConfigWriter:
         self.utils.match_permissions(from_path, dest_path)
         
     def write_configs(self):
+        '''
+        Writes all configs from the template folder
+        to the target project folder.
+
+        If a flavor is selected, merges the 'generic'
+        templates/configs with the 'flavored' 
+        templates/configs, and writem to the target
+        project folder.
+        '''
         from_root = self.from_path / "generic"
         dest_paths = []
         flavor_root = ""
