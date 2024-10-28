@@ -26,5 +26,6 @@ class InfraScaffolding:
                 "project_organization": project_organization
                 }
         ConfigWriter(from_path, to_path, config, flavor).write_configs()
+        os.chdir(to_path)
         utils.direnv_allow()
         print(infrastructure_success.format(config['project_name']))
