@@ -3,6 +3,8 @@ from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
 import subprocess
 import os
+from rich import print
+from .help_strings import command_not_installed
 
 class Utils:
     yaml=YAML()
@@ -16,6 +18,15 @@ class Utils:
             print("ERROR: git not installed")
             exit(1)
         subprocess.run(["git", "diff", "--color-words", "--no-index", file1, file2])
+            
+    @staticmethod
+    def direnv_allow():
+        subprocess.run("zsh .envrc && clear", shell=True)
+        direnv_installed = subprocess.run(["which", "direnv"], stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL)
+        if direnv_installed.returncode > 0:
+            print(command_not_installed)
+        else:
+            subprocess.Popen("direnv allow", shell=True)
 
     def merge_dicts(self, dict1, dict2):
         merged_dict = dict1.copy()

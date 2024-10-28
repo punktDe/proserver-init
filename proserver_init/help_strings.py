@@ -8,3 +8,11 @@ infrastructure_success = """
   If you choose to store your Vault password in cleartext instead of using a secrets manager,
   make sure to remove the executable bit from the vault_password_file: `chmod -x vault_password_file`
 """
+
+command_not_installed = """
+:warning: [yellow]Warning![/yellow] direnv is not installed. In order to automatically activate 
+the Python virtual environment and export necessary environment variables when entering this 
+project's directory, please install direnv via Homebrew, MacPorts or Nix.
+
+Alternatively, run `source .envrc` upon entering the project directory.
+"""

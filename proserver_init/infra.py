@@ -26,6 +26,5 @@ class InfraScaffolding:
                 "project_organization": project_organization
                 }
         ConfigWriter(from_path, to_path, config, flavor).write_configs()
-        subprocess.run("zsh .envrc && clear", shell=True)
-        subprocess.Popen("direnv allow", shell=True)
+        utils.direnv_allow()
         print(infrastructure_success.format(config['project_name']))
