@@ -6,7 +6,7 @@ class ProserverInit < Formula
 
   head "git@git.punkt.de:pt/proserver-init.git", :using => :git, :branch => "main"
 
-  url "git@git.punkt.de:pt/proserver-init.git", :using => :git, :tag => "2.0.0"
+  url "git@git.punkt.de:pt/proserver-init.git", :using => :git, :tag => "2.0.1"
 
   depends_on "python@3.12"
 
