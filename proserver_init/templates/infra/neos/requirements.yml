@@ -1,0 +1,20 @@
+---
+roles:
+  - name: elasticsearch
+    src: https://github.com/punktDe/ansible-proserver-elasticsearch
+  - name: mail
+    src: https://github.com/punktDe/ansible-proserver-mail
+  - name: mailhog
+    src: https://github.com/punktDe/ansible-proserver-mailhog
+  - name: mariadb
+    src: https://github.com/punktDe/ansible-proserver-mariadb
+  - name: oauth2_proxy
+    src: https://github.com/punktDe/ansible-proserver-oauth2-proxy
+  - name: php
+    src: https://github.com/punktDe/ansible-proserver-php
+  - name: redis
+    src: https://github.com/punktDe/ansible-proserver-redis
+  - name: supervisord
+    src: https://github.com/punktDe/ansible-proserver-supervisord
+  # - name: varnish
+  # src: https://github.com/punktDe/ansible-proserver-varnish

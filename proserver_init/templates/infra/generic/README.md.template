@@ -1,4 +1,4 @@
-# {1}
+# $project_name
 
 ### Preparing your system
 ```sh
@@ -11,8 +11,8 @@ source ~/.zshrc
 
 ### Cloning the repository
 ```sh
-git clone git@git.punkt.de:{0}/{1}.git ~/Workspace/Projects/{1}
-cd ~/Workspace/Projects/{1}
+git clone git@git.punkt.de:$project_organization/$project_name.git ~/Workspace/Projects/$project_name
+cd ~/Workspace/Projects/$project_name
 ```
 
 ### Installing the dependencies
@@ -27,5 +27,5 @@ pre-commit install
 
 ### Run Ansible playbook
 ```sh
-ansible-playbook {0}.yaml --limit staging
-
+ansible-playbook $project_organization.yaml --limit staging
+```

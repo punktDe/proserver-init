@@ -1,0 +1,10 @@
+---
+dependencies:
+  - role: dehydrated
+  - role: oauth2_proxy
+    when: app.oauth2_proxy is defined and app.oauth2_proxy
+  - role: nginx
+  - role: php
+  - role: redis
+  - role: mariadb
+  - role: varnish
