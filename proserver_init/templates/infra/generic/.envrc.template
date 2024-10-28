@@ -28,4 +28,3 @@ if ! [ -d "roles/system" ]; then
     echo "Installing Ansible roles"
     ansible-galaxy install -r requirements.yml
 fi
-

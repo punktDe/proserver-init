@@ -22,10 +22,10 @@ class InfraScaffolding:
         project_name = os.path.split(to_path)[1]
         project_organization = project_name.replace("-infrastructure", "")
         config = {
-            "project_name": project_name,
-            "project_organization": project_organization
-            }
+                "project_name": project_name,
+                "project_organization": project_organization
+                }
         ConfigWriter(from_path, to_path, config, flavor).write_configs()
-        subprocess.run(["direnv", "allow"])
-
+        subprocess.run("zsh .envrc && clear", shell=True)
+        subprocess.Popen("direnv allow", shell=True)
         print(infrastructure_success.format(config['project_name']))
