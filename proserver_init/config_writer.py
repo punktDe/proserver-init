@@ -1,13 +1,13 @@
+from pathlib import Path
 import os
 from string import Template
 from .utils import Utils
-import inquirer
-import tempfile
 from filecmp import cmp
+from rich import print
 
 class ConfigWriter:
 
-    def __init__(self, from_path: str, to_path: str, config: dict, flavor=None):
+    def __init__(self, from_path: Path, to_path: str, config: dict, flavor=None):
         self.utils = Utils()
         self.from_path = from_path
         self.to_path = to_path
@@ -15,6 +15,7 @@ class ConfigWriter:
         self.flavor = flavor
 
     def write_config(self, from_path: str, dest_path: str) -> None:
+        print(f"[bright_black]Templated {dest_path}[/bright_black]")
         with open(from_path, "r", encoding="utf-8") as ffile:
             if "template" in os.path.split(from_path)[1]:
                 dest_path = dest_path.replace(".template", "")
@@ -49,7 +50,7 @@ class ConfigWriter:
         self.utils.match_permissions(from_path, dest_path)
         
     def write_configs(self):
-        from_root = os.path.join(self.from_path, "generic")
+        from_root = self.from_path / "generic"
         dest_paths = []
         flavor_root = ""
         flavor_files = []
@@ -58,15 +59,17 @@ class ConfigWriter:
             flavor_files = [os.path.join(dp, f) for dp, _, filenames in os.walk(flavor_root) for f in filenames]
         for root, _, files in os.walk(from_root):
             for file in files:
+                if os.path.splitext(file)[1] == ".pyc":
+                    continue
                 from_file = os.path.join(root, file)
-                relative_file_path = from_file.replace(from_root, '')
-                dest_file = self.to_path + relative_file_path
+                relative_file_path = os.path.relpath(from_file, start=from_root)
+                dest_file = os.path.join(self.to_path, relative_file_path)
                 dest_path = os.path.split(dest_file)[0]
                 if not dest_path in dest_paths:
                     dest_paths.append(dest_path)
                     os.makedirs(dest_path, exist_ok=True)
                 if isinstance(self.flavor, str):
-                    flavor_file = flavor_root + relative_file_path
+                    flavor_file = os.path.join(flavor_root, relative_file_path)
                     if flavor_file in flavor_files:
                         self.utils.merge_configs(base_file=from_file, flavor_file=flavor_file, dest_file = dest_file)
                         continue

@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
-from argparse import ArgumentError
 import os
-import re
-#import requests
-import subprocess
 from .utils import Utils
-from pathlib import Path
 from .config_writer import ConfigWriter
 from .utils import Utils
 from .help_strings import infrastructure_success
+from rich import print
 
 class InfraScaffolding:
     def init_project(self, from_path, to_path, flavor = "generic"):
         utils = Utils()
-        from_path = f"{from_path}/templates/infra"
+        from_path = from_path / "templates" / "infra"
         directory_structure = [
                 "group_vars",
                 "roles/app/defaults",

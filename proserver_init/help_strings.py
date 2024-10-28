@@ -1,5 +1,5 @@
 infrastructure_success = """
-Success! Infrastructure project {} has been initialized.
+:sparkles: [green]Success! Infrastructure project[/green] [bold green]{}[/bold green] [green]has been initialized.[/green]
 
 * Please make sure to update your `vault_password_file` before creating your secrets.yaml file.
   By default, the script fetches the Ansible Vault password from a Bitwarden vault.

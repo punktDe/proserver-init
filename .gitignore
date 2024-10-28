@@ -6,3 +6,5 @@ __pycache__
 /*.retry
 /.fact_cache
 /venv*
+dist
+*.egg-info
