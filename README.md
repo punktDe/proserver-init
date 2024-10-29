@@ -13,13 +13,13 @@ brew install proserver-init
 
 # Usage
 ```
-proserver-init [--project_dir path/to/project] project_type [--flavor flavor]
+proserver-init [--project_dir/-p path/to/project] project-type [--flavor/-f flavor]
 
 # Set up a generic Ansible project in the current directory
 proserver-init infra
 
 # Set up a Neos infrastructure project in ~/Workspace/Project/example-infrastructure
-proserver-init --project_dir ~/Workspace/Projects/example-infrastucture infra --flavor neos
+proserver-init -p ~/Workspace/Projects/example-infrastucture infra -f neos
 ```
 
 Available project types:
