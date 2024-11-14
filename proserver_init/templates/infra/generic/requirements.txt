@@ -3,3 +3,4 @@ requests
 zabbix-api
 ansible-lint
 PyYAML
+netaddr

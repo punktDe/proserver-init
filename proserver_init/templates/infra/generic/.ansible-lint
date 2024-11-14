@@ -24,3 +24,4 @@ exclude_paths:
   - roles/apache
   - roles/solr
   - roles/varnish
+  - roles/docker
