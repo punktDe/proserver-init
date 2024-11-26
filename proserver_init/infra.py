@@ -5,7 +5,6 @@ from .config_writer import ConfigWriter
 from .utils import Utils
 from .help_strings import infrastructure_success
 from rich import print
-import subprocess
 
 class InfraScaffolding:
     def __init__(self):
@@ -32,7 +31,7 @@ class InfraScaffolding:
         self.utils.direnv_allow()
         print(infrastructure_success.format(config['project_name']))
 
-    def init_role(self, from_path, to_path, flavor = "generic"):
+    def init_role(self, from_path, to_path):
         utils = Utils()
         from_path = from_path / "templates" / "infra_role"
         directory_structure = [
