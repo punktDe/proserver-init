@@ -16,7 +16,7 @@ def main():
         raise parser.error("Infrastructure project folder should have an '-infrastructure' prefix")
     if args.project_type == "infra":
         InfraScaffolding().init_project(from_path=FROM_PATH, to_path=args.project_dir, flavor=args.flavor)
-    if args.project_type == "infra_role":
+    if args.project_type == "infra-role":
         InfraScaffolding().init_role(from_path=FROM_PATH, to_path=args.project_dir)
 
 
