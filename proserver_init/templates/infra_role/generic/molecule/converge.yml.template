@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  environment:
+    GITHUB_ACTIONS: "maybe"
+  tasks:
+    - name: "Include {{ role_name }}"
+      ansible.builtin.include_role:
+        name: "{{ role_name }}"

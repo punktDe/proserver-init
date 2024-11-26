@@ -10,11 +10,13 @@ def main():
     subparsers = parser.add_subparsers(help='type of the project', dest='project_type', required=True)
     parser_infra = subparsers.add_parser('infra', help='')
     parser_infra.add_argument('-f', '--flavor', choices=('typo3', 'neos', 'spiral'), help='flavor of the project', required=False, default=None)
-    parser_infra.add_argument('-p', '--project-dir', type=str, help='path to the project', required=False, default=os.getcwd())
+    parser_infra = subparsers.add_parser('infra-role', help='')
     args = parser.parse_args()
     if args.project_type == "infra" and not "-infrastructure" in args.project_dir:
         raise parser.error("Infrastructure project folder should have an '-infrastructure' prefix")
     if args.project_type == "infra":
+        InfraScaffolding().init_project(from_path=FROM_PATH, to_path=args.project_dir, flavor=args.flavor)
+    if args.project_type == "infra-role":
         InfraScaffolding().init_project(from_path=FROM_PATH, to_path=args.project_dir, flavor=args.flavor)
 
 
