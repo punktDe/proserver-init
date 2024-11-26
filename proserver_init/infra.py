@@ -47,7 +47,7 @@ class InfraScaffolding:
         config = {
                 "role_name": role_name,
                 }
-        ConfigWriter(from_path, to_path, config, flavor).write_configs()
+        ConfigWriter(from_path, to_path, config, flavor = "generic").write_configs()
         os.chdir(to_path)
         utils.direnv_allow()
         print(f"{role_name} has been initialized succesfully")
