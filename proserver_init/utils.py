@@ -57,12 +57,10 @@ class Utils:
         try:
             self.merge_yaml(base_file, flavor_file, dest_file)
             return
-        except (ScannerError, AttributeError, ParserError) as e:
+        except (ScannerError, AttributeError, ParserError):
             for filename in [base_file, flavor_file, dest_file]:
                 if re.search(r"ya?ml", filename) and not "template" in filename:
-                    raise ValueError(f"File {filename} is not a valid YAML file!")
-                else:
-                    pass
+                    print(f"[yellow]Warning![/yellow] File {filename} is not a valid YAML file!")
         with open(base_file, 'r', encoding="utf-8") as bfile, \
              open(flavor_file, 'r', encoding="utf-8") as ffile, \
              open(dest_file, 'w+', encoding="utf-8") as dfile:
