@@ -2,6 +2,7 @@ import re
 from typing import Dict
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
+from ruamel.yaml.parser import ParserError
 import subprocess
 import os
 from rich import print
@@ -56,7 +57,7 @@ class Utils:
         try:
             self.merge_yaml(base_file, flavor_file, dest_file)
             return
-        except (ScannerError, AttributeError) as e:
+        except (ScannerError, AttributeError, ParserError) as e:
             for filename in [base_file, flavor_file, dest_file]:
                 if re.search(r"ya?ml", filename) and not "template" in filename:
                     raise ValueError(f"File {filename} is not a valid YAML file!")
