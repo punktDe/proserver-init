@@ -1,4 +1,5 @@
 import re
+from typing import Dict
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
 import subprocess
@@ -28,7 +29,7 @@ class Utils:
         else:
             subprocess.Popen("direnv allow", shell=True)
 
-    def merge_dicts(self, dict1, dict2):
+    def merge_dicts(self, dict1: Dict, dict2: Dict):
         merged_dict = dict1.copy()
         for key, value in dict2.items():
             if key in merged_dict:
@@ -55,9 +56,9 @@ class Utils:
         try:
             self.merge_yaml(base_file, flavor_file, dest_file)
             return
-        except ScannerError:
+        except (ScannerError, AttributeError) as e:
             for filename in [base_file, flavor_file, dest_file]:
-                if re.search(r"ya?ml", filename):
+                if re.search(r"ya?ml", filename) and not "template" in filename:
                     raise ValueError(f"File {filename} is not a valid YAML file!")
                 else:
                     pass
