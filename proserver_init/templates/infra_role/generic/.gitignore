@@ -11,4 +11,5 @@ id_ed25519*
 /venv*/
 .collections
 roles
+.roles
 .venv

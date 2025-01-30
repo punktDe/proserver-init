@@ -28,7 +28,7 @@ class InfraScaffolding:
                 }
         ConfigWriter(from_path, to_path, config, flavor).write_configs()
         os.chdir(to_path)
-        self.utils.direnv_allow()
+        self.utils.project_post_init()
         print(infrastructure_success.format(config['project_name']))
 
     def init_role(self, from_path, to_path):
@@ -47,5 +47,5 @@ class InfraScaffolding:
                 }
         ConfigWriter(from_path, to_path, config, flavor=None).write_configs()
         os.chdir(to_path)
-        self.utils.direnv_allow()
+        self.utils.project_post_init()
         print(f"{role_name} has been initialized succesfully")

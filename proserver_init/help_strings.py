@@ -9,7 +9,7 @@ infrastructure_success = """
   make sure to remove the executable bit from the vault_password_file: `chmod -x vault_password_file`
 """
 
-command_not_installed = """
+direnv_not_installed = f"""
 :warning: [yellow]Warning![/yellow] direnv is not installed. In order to automatically activate 
 the Python virtual environment and export necessary environment variables when entering this 
 project's directory, please install direnv via Homebrew, MacPorts or Nix.

@@ -6,29 +6,46 @@ from ruamel.yaml.parser import ParserError
 import subprocess
 import os
 from rich import print
-from .help_strings import command_not_installed
+from .help_strings import direnv_not_installed
 
 class Utils:
     yaml=YAML()
     yaml.explicit_start = True
     yaml.indent(mapping=2, sequence=4, offset=2)
 
+
+    @staticmethod
+    def program_installed(exec_name: str, fail_if_not_installed: bool = False, fail_description: str = "") -> bool:
+        result = subprocess.run(["which", exec_name], stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL)
+        if result.returncode > 0:
+            if len(fail_description) > 0:
+                print(fail_description)
+            if fail_if_not_installed:
+                print(f":error: [red]ERROR:[/red] {{ exec_name }} is not installed")
+                exit(1)
+            else:
+                print(f":warning: [yellow]WARNING:[/yellow] {{ exec_name }} is not installed")
+                return False
+        else: 
+            return True
+
     @staticmethod
     def diff(file1, file2):
-        git_installed = subprocess.run(["which", "git"], stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL)
-        if git_installed.returncode > 0:
-            print("ERROR: git not installed")
-            exit(1)
+        Utils().program_installed("git", fail_if_not_installed=True)
         subprocess.run(["git", "diff", "--color-words", "--no-index", file1, file2])
             
     @staticmethod
-    def direnv_allow():
+    def project_post_init():
         subprocess.run("zsh .envrc && clear", shell=True)
-        direnv_installed = subprocess.run(["which", "direnv"], stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL)
-        if direnv_installed.returncode > 0:
-            print(command_not_installed)
-        else:
+        direnv_installed = Utils().program_installed("direnv", False, direnv_not_installed)
+        if direnv_installed:
             subprocess.Popen("direnv allow", shell=True)
+        Utils().program_installed("git", fail_if_not_installed=True)
+        if not os.path.exists(".git"):
+            subprocess.run(["git", "init"])
+            subprocess.run(["pre-commit", "install"])
+            subprocess.run(["pre-commit", "update"])
+
 
     def merge_dicts(self, dict1: Dict, dict2: Dict):
         merged_dict = dict1.copy()
