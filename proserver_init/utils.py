@@ -43,8 +43,9 @@ class Utils:
         Utils().program_installed("git", fail_if_not_installed=True)
         if not os.path.exists(".git"):
             subprocess.run(["git", "init"])
-            subprocess.run(["pre-commit", "install"])
-            subprocess.run(["pre-commit", "update"])
+            if not os.path.exists(".git/hooks/pre-commit"):
+                subprocess.run(["pre-commit", "install"])
+                subprocess.run(["pre-commit", "autoupdate"])
 
 
     def merge_dicts(self, dict1: Dict, dict2: Dict):
