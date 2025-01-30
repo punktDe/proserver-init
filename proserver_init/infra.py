@@ -32,7 +32,6 @@ class InfraScaffolding:
         print(infrastructure_success.format(config['project_name']))
 
     def init_role(self, from_path, to_path):
-        utils = Utils()
         from_path = from_path / "templates" / "infra_role"
         directory_structure = [
                 "defaults",
@@ -41,12 +40,12 @@ class InfraScaffolding:
                 "tasks",
                 "templates",
                 ]
-        utils.create_project_structure(to_path, directory_structure)
+        self.utils.create_project_structure(to_path, directory_structure)
         role_name = os.path.split(to_path)[1]
         config = {
                 "role_name": role_name,
                 }
         ConfigWriter(from_path, to_path, config, flavor=None).write_configs()
         os.chdir(to_path)
-        utils.direnv_allow()
+        self.utils.direnv_allow()
         print(f"{role_name} has been initialized succesfully")

@@ -47,10 +47,10 @@ class ConfigWriter:
                         break
                     elif replace == "diff":
                         self.utils.diff(tmp_file, dest_path)
-                        if os.path.exists(tmp_file):
-                            os.remove(tmp_file)
                     else:
                         print("Please type either 'yes', 'no' or 'diff'")
+            if os.path.exists(tmp_file):
+                os.remove(tmp_file)
         with open(dest_path, "w+", encoding="utf-8") as dfile:
             dfile.write(from_file)
         self.utils.match_permissions(from_path, dest_path)
