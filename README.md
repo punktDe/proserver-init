@@ -37,6 +37,7 @@ proserver-init -p ~/Workspace/Projects/example-infrastucture infra -f neos
 Available project types:
 
 - infra
+- infra-role
 
 Available flavors:
 
