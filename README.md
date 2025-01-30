@@ -11,7 +11,7 @@ A command-line utility that facilitates setting up a new punkt.de Proserver proj
 ## Installation
 
 ```bash
-brew tap pt/proserver-init git@git.punkt.de:pt/proserver-init.git
+brew tap pt/proserver-init https://github.com/punktDe/proserver-init.git
 brew install proserver-init
 brew install --HEAD proserver-init # to install the development version
 ```
