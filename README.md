@@ -19,7 +19,7 @@ brew install --HEAD proserver-init # to install the development version
 Alternatively, run as a Nix flake, e.g.:
 
 ```bash
-nix flake run github:punktDe/proserver-init <parameters>
+nix run github:punktDe/proserver-init <parameters>
 ```
 
 ## Usage
