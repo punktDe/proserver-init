@@ -42,6 +42,8 @@ class ConfigWriter:
                     print(f"Replace the file {dest_path}? (yes/no/diff)")
                     replace = input()
                     if replace == "no":
+                        if os.path.exists(tmp_file):
+                            os.remove(tmp_file)
                         return
                     if replace == "yes":
                         break
@@ -49,8 +51,8 @@ class ConfigWriter:
                         self.utils.diff(tmp_file, dest_path)
                     else:
                         print("Please type either 'yes', 'no' or 'diff'")
-            if os.path.exists(tmp_file):
-                os.remove(tmp_file)
+                if os.path.exists(tmp_file):
+                    os.remove(tmp_file)
         with open(dest_path, "w+", encoding="utf-8") as dfile:
             dfile.write(from_file)
         self.utils.match_permissions(from_path, dest_path)
