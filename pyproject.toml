@@ -17,4 +17,4 @@ dependencies = [
 ]
 
 [project.scripts]
-cli = "proserver_init.cli:main"
+proserver-init = "proserver_init.cli:main"
