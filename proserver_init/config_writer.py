@@ -48,7 +48,7 @@ class ConfigWriter:
                     if replace == "yes":
                         break
                     elif replace == "diff":
-                        self.utils.diff(tmp_file, dest_path)
+                        self.utils.diff(dest_path, tmp_file)
                     else:
                         print("Please type either 'yes', 'no' or 'diff'")
                 if os.path.exists(tmp_file):
