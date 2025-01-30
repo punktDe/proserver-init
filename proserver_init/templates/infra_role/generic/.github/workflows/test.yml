@@ -5,6 +5,10 @@ on:
   push:
   workflow_dispatch:
 
+env:
+  ANSIBLE_ROLES_PATH: roles
+  ANSIBLE_HASH_BEHAVIOUR: merge
+
 jobs:
   lint:
     runs-on: ubuntu-latest
