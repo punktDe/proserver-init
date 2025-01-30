@@ -4,14 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 py-modules = []
+packages =  ["proserver-init"]
 
 [project]
 name = "proserver-init"
 description = "A command-line utility that facilitates setting up a new punkt.de Proserver project"
 version = "0.1.0"
-
-[tool.setuptools]
-packages =  ["proserver-init"]
 
 [tool.setuptools.packages.find]
 where = ["proserver-init"]
