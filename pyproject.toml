@@ -2,8 +2,8 @@
 requires = [ "setuptools>=41", "wheel"  ]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools-git-versioning]
-enabled = true
+[tool.setuptools]
+py-modules = []
 
 [project]
 name = "proserver-init"
