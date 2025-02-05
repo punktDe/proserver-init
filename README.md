@@ -6,7 +6,6 @@ A command-line utility that facilitates setting up a new punkt.de Proserver proj
 
 - homebrew
 - direnv (optional)
-- pre-commit
 
 ## Installation
 
