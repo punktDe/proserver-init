@@ -9,6 +9,9 @@ class ProserverInit < Formula
   url "https://github.com/punktDe/proserver-init", :using => :git, :tag => "0.2.0"
 
   depends_on "python@3.12"
+  depends_on "uv"
+  depends_on "pre-commit"
+  depends_on "yq"
 
   resource "ruamel.yaml" do
     url "https://files.pythonhosted.org/packages/29/81/4dfc17eb6ebb1aac314a3eb863c1325b907863a1b8b1382cdffcb6ac0ed9/ruamel.yaml-0.18.6.tar.gz"
