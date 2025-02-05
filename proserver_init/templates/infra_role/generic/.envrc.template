@@ -4,15 +4,13 @@ if [ -n "$$DIRENV_DIFF" ]; then
   set -e 
 fi
 
-if [ ! -f venv-$project_organization/bin/activate ]
-then
+if [ ! -f venv-$role_name/bin/activate ]; then
 	echo "Creating a virtual Python environment"
-	uv venv --allow-existing --seed venv-$project_organization >/dev/null
-	echo "Activating the Python virtual environment"
-	. venv-$project_organization/bin/activate
-
-if [ -f venv-$project_organization/bin/pip3 ]
-then
-	echo "Installing Python requirements"
-  uv pip install -r requirements.txt 1> /dev/null
+	uv -q venv --allow-existing --seed venv-$role_name
 fi
+
+echo "Activating the Python virtual environment"
+. venv-$role_name/bin/activate
+
+echo "Installing Python requirements"
+uv -q pip install -r requirements.txt
