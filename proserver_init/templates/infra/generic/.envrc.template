@@ -18,7 +18,7 @@ then
 fi
 
 # Install Ansible roles
-roles=$(yq ".roles.[].name" requirements.yml)
+roles=$$(yq ".roles.[].name" requirements.yml)
 for role in "${roles[@]}"; do
   if ! [ -d "roles/$role" ]; then
       echo "Installing Ansible roles"
