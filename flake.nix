@@ -29,11 +29,20 @@
         python = pkgs.python3;
       in
       {
-        packages.default =
-          let
-            attrs = project.renderers.buildPythonPackage { inherit python; };
-          in
-          python.pkgs.buildPythonPackage (attrs);
+        packages = {
+          default =
+            let
+              attrs = project.renderers.buildPythonPackage { inherit python; };
+            in
+            python.pkgs.buildPythonPackage (attrs);
+          dev = pkgs.mkShell {
+            packages = [
+              pkgs.git
+              pkgs.python3
+              pkgs.uv
+            ];
+          };
+        };
       }
     );
 }
