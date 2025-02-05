@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 if [ -n "$$DIRENV_DIFF" ]; then
   # Do not `set -e` unless we're being run from direnv
   set -e 
@@ -7,24 +7,22 @@ fi
 if [ ! -f venv-$project_organization/bin/activate ]
 then
 	echo "Creating a virtual Python environment"
-	python3 -m venv venv-$project_organization >/dev/null
-fi
-
-if [ -f venv-$project_organization/bin/activate ]
-then
+	uv venv --allow-existing --seed venv-$project_organization >/dev/null
 	echo "Activating the Python virtual environment"
 	. venv-$project_organization/bin/activate
-fi
 
 if [ -f venv-$project_organization/bin/pip3 ]
 then
 	echo "Installing Python requirements"
-	venv-$project_organization/bin/pip3 install --upgrade pip 1> /dev/null
-	venv-$project_organization/bin/pip3 install -r requirements.txt 1> /dev/null
+  uv pip install -r requirements.txt 1> /dev/null
 fi
 
 # Install Ansible roles
-if ! [ -d "roles/system" ]; then
-    echo "Installing Ansible roles"
-    ansible-galaxy install -r requirements.yml
-fi
+roles=$(yq ".roles.[].name" requirements.yml)
+for role in "${roles[@]}"; do
+  if ! [ -d "roles/$role" ]; then
+      echo "Installing Ansible roles"
+      ansible-galaxy install -r requirements.yml
+      break
+  fi
+done
