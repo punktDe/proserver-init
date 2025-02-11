@@ -10,6 +10,7 @@ debug.log
 id_ed25519*
 /venv*/
 .collections
+.ansible
 roles/apache
 roles/dehydrated
 roles/elasticsearch

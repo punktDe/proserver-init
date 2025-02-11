@@ -8,6 +8,7 @@ warn_list:
   - unnamed-task
 
 exclude_paths:
+  - .ansible
   - group_vars/secrets.*
   - roles/dehydrated
   - roles/mailhog

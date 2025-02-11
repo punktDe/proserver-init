@@ -10,4 +10,4 @@ warn_list:
   - unnamed-task
 
 exclude_paths:
-  - .ansible/roles
+  - .ansible/
