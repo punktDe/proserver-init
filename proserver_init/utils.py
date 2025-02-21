@@ -49,7 +49,10 @@ class Utils:
 
 
     def merge_dicts(self, dict1: Dict, dict2: Dict):
-        merged_dict = dict1.copy()
+        try:
+            merged_dict = dict1.copy()
+        except AttributeError:
+            merged_dict = {}
         for key, value in dict2.items():
             if key in merged_dict:
                 if isinstance(merged_dict[key], dict) and isinstance(value, dict):

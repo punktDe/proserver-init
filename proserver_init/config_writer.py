@@ -4,6 +4,8 @@ from string import Template
 from .utils import Utils
 from filecmp import cmp
 from rich import print
+import tempfile
+import shutil
 
 class ConfigWriter:
 
@@ -32,7 +34,7 @@ class ConfigWriter:
             tmp_file = os.path.join(os.path.split(dest_path)[0], "." + os.path.split(dest_path)[1] + ".tmp")
             with open(tmp_file, 'w') as f:
                 f.write(from_file)
-            never_replace = ["roles/app", "requirements.yml", "README.md", "inventory.ini", "vault_password_file"] 
+            never_replace = ["roles/app", "host_vars", "group_vars", "requirements.yml", "README.md", "inventory.ini", "vault_password_file"] 
             if cmp(tmp_file, dest_path, shallow=False) or any(pattern in dest_path for pattern in never_replace):
                 if os.path.exists(tmp_file):
                     os.remove(tmp_file)
@@ -72,9 +74,28 @@ class ConfigWriter:
         dest_paths = []
         flavor_root = ""
         flavor_files = []
+        merged_from_root = tempfile.TemporaryDirectory().name
         if isinstance(self.flavor, str):
             flavor_root = os.path.join(self.from_path, self.flavor)
             flavor_files = [os.path.join(dp, f) for dp, _, filenames in os.walk(flavor_root) for f in filenames]
+            from_files = [os.path.join(dp, f) for dp, _, filenames in os.walk(from_root) for f in filenames]
+            unflavored_files = [file for file in from_files if os.path.relpath(file, start=from_root) not in [os.path.relpath(ffile, start=flavor_root) for ffile in flavor_files]]
+            os.mkdir(merged_from_root)
+            for ufile in unflavored_files:
+                dest_file = str(os.path.join(merged_from_root, str(os.path.relpath(ufile, start=from_root))))
+                dest_path = os.path.split(dest_file)[0]
+                os.makedirs(dest_path, exist_ok=True)
+                shutil.copy(ufile, dest_file)
+            for flavor_file in flavor_files:
+                relative_file_path = os.path.relpath(flavor_file, start=flavor_root)
+                dest_file = os.path.join(merged_from_root, relative_file_path)
+                base_file = os.path.join(from_root, relative_file_path)
+                if not os.path.exists(base_file):
+                    _, base_file = tempfile.mkstemp()
+                dest_path = os.path.split(dest_file)[0]
+                os.makedirs(dest_path, exist_ok=True)
+                self.utils.merge_configs(base_file=base_file, flavor_file=flavor_file, dest_file=dest_file)
+            from_root = merged_from_root
         for root, _, files in os.walk(from_root):
             for file in files:
                 if os.path.splitext(file)[1] == ".pyc":
@@ -86,9 +107,6 @@ class ConfigWriter:
                 if not dest_path in dest_paths:
                     dest_paths.append(dest_path)
                     os.makedirs(dest_path, exist_ok=True)
-                if isinstance(self.flavor, str):
-                    flavor_file = os.path.join(flavor_root, relative_file_path)
-                    if flavor_file in flavor_files:
-                        self.utils.merge_configs(base_file=from_file, flavor_file=flavor_file, dest_file=dest_file)
-                        continue
                 self.write_config(from_file, dest_file)
+        if os.path.exists(merged_from_root):
+            shutil.rmtree(merged_from_root)
