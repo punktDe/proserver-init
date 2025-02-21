@@ -1,7 +1,4 @@
 ---
-- name: Handle nginx configuration
-  ansible.builtin.include_tasks: nginx.yaml
-
 - name: Handle the .env file
   ansible.builtin.include_tasks: dotenv.yaml
 
