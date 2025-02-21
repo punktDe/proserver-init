@@ -24,3 +24,5 @@ for role in $$roles; do
       break
   fi
 done
+
+PATH="${PWD}/.bin:$PATH"

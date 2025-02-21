@@ -11,6 +11,8 @@ id_ed25519*
 /venv*/
 .collections
 .ansible
+.bin/ansible-vault-merge
+.bin/ansible-keyscan
 roles/apache
 roles/dehydrated
 roles/elasticsearch

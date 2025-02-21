@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+while IFS= read -r line; do
+  if [[ $line =~ "[" || $line == "" || ! $line =~ "." ]]; then
+    continue
+  else 
+    if [[ $line =~ "ansible_host" ]]; then
+      host="$(echo $line | awk '{print $2}' | sed 's/ansible_host=//g')"
+    else
+      host="$(echo $line | awk '{print $1}')"
+    fi
+  fi
+  ssh-keyscan -t ed25519 $host
+done < $1
