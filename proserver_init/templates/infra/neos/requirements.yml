@@ -16,5 +16,3 @@ roles:
     src: https://github.com/punktDe/ansible-proserver-redis
   - name: supervisord
     src: https://github.com/punktDe/ansible-proserver-supervisord
-  # - name: varnish
-  # src: https://github.com/punktDe/ansible-proserver-varnish

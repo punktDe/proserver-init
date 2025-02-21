@@ -29,3 +29,40 @@ pre-commit install
 ```sh
 ansible-playbook $project_organization.yaml --limit staging
 ```
+
+### Environment variables
+Unlike some other Punkt.de projects, this Ansible playbook doesn't utilize a separate app.env template.
+
+Instead, values are taken from `app.config` dictionary, and are transformed using a filter plugin.
+
+As a result, this configuration...
+
+```yaml
+app:
+  config:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+```
+
+...produces the following lines in the .env-file:
+
+```
+REDIS_HOST: 127.0.0.1
+REDIS_PORT: 6379
+```
+
+The key of the respective environment variable is constructed from all the parent and child keys relative to the `app.config` dictionary, separated by an underscore, and written in all-caps.
+
+In the above example, `redis.host` becomes `REDIS_HOST`, and `redis.port` becomes `REDIS_PORT`.
+
+The dictionary keys can be nested infinitely, and the filter plugin also has no effect on variables that already contain underscores.
+
+### Deployments
+To test the infrastructure deployment, create a **merge request** against the main branch.
+
+To deploy to staging, merge to the main branch.
+
+To deploy to production, create a **tag**.
+
+Additionally, every commit triggers a lint check and a `--check --diff` playbook run.

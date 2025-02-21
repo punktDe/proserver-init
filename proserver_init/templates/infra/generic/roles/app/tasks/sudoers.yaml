@@ -1,0 +1,16 @@
+---
+- name: Ensure the sudoers.d folder exists
+  ansible.builtin.file:
+    state: directory
+    path: "/etc/sudoers.d"
+    owner: "root"
+    mode: "0755"
+
+- name: Allow proserver user to restart php-fpm
+  ansible.builtin.copy:
+    content: |
+      proserver ALL= NOPASSWD: /usr/sbin/service {{ php.fpm.service }} reload
+    dest: "{{ app.prefix.sudoers }}/app-reload-php-fpm"
+    owner: root
+    mode: "0644"
+    validate: "sh -c 'cat /etc/sudoers %s | visudo -cf-'"

@@ -1,0 +1,8 @@
+---
+app:
+  oauth2_proxy:
+  prefix:
+    config: /usr/local/etc
+    current_release: /var/www/current
+    sudoers: |
+      {{ '/usr/local/etc/sudoers.d' if ansible_system == 'FreeBSD' else '/etc/sudoers.d' }}

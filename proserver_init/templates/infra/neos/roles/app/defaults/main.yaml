@@ -1,0 +1,28 @@
+---
+app:
+  config:
+    smtp:
+      host:
+      port: |
+        {{ '1025' if groups.mailhog is defined and inventory_hostname in groups.mailhog else '25' }}
+      user:
+      password:
+      encryption:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+    mysql:
+      host: 127.0.0.1
+      database:
+      port: 3306
+      username:
+      password:
+    elasticsearch:
+      scheme: http
+      host: 127.0.0.1
+      port: 9200
+      user: elastic
+      password:
+      index:
+    site_domain: "{{ inventory_hostname }}"
+    flow_context: Production

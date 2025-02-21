@@ -1,0 +1,9 @@
+---
+- name: Handle nginx configuration
+  ansible.builtin.include_tasks: nginx.yaml
+
+- name: Handle the .env file
+  ansible.builtin.include_tasks: dotenv.yaml
+
+- name: Handle proserver privileges for deployment
+  ansible.builtin.include_tasks: sudoers.yaml

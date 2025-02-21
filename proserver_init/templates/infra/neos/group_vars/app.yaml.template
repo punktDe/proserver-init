@@ -1,0 +1,10 @@
+---
+app:
+  config:
+    elasticsearch:
+      index: "$project_organization-{{ environment_name_abbrev }}-app"
+      password: "{{ elasticsearch.users.builtin.elastic.password }}"
+    mysql:
+      database: "{{ mariadb.databases.app.name }}"
+      username: "{{ mariadb.users.app.username }}"
+      password: "{{ mariadb.users.app.password }}"
