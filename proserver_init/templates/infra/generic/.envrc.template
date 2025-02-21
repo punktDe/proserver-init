@@ -25,4 +25,4 @@ for role in $$roles; do
   fi
 done
 
-PATH="${PWD}/.bin:$PATH"
+PATH="$${PWD}/.bin:$$PATH"
