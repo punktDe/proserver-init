@@ -92,17 +92,3 @@ class Utils:
     def create_project_structure(self, base_path: str, paths: list) -> None:
         for directory in paths:
             os.makedirs(os.path.join(base_path, directory), exist_ok=True)
-
-    def find_application_support_dir(self):
-        windows = r"%APPDATA%"
-        windows = os.path.expandvars(windows)
-        if 'APPDATA' not in windows:
-            return windows
-        user_directory = os.path.expanduser('~')
-        macos = os.path.join(user_directory, 'Library', 'Application Support')
-        if os.path.exists(macos):
-            return macos
-        linux = os.path.join(user_directory, '.local', 'share')
-        if os.path.exists(linux):
-            return linux
-        return user_directory

@@ -21,7 +21,6 @@ class ConfigWriter:
         in the target folder and gives the user
         an option to overwrite or skip the file.
         '''
-        print(f"[bright_black]Templated {dest_path}[/bright_black]")
         with open(from_path, "r", encoding="utf-8") as ffile:
             if "template" in os.path.split(from_path)[1]:
                 dest_path = dest_path.replace(".template", "")
@@ -33,7 +32,8 @@ class ConfigWriter:
             tmp_file = os.path.join(os.path.split(dest_path)[0], "." + os.path.split(dest_path)[1] + ".tmp")
             with open(tmp_file, 'w') as f:
                 f.write(from_file)
-            if cmp(tmp_file, dest_path, shallow=False):
+            never_replace = ["roles/app", "requirements.yml", "README.md", "inventory.ini", "vault_password_file"] 
+            if cmp(tmp_file, dest_path, shallow=False) or any(pattern in dest_path for pattern in never_replace):
                 if os.path.exists(tmp_file):
                     os.remove(tmp_file)
                 return
@@ -55,6 +55,7 @@ class ConfigWriter:
                     os.remove(tmp_file)
         with open(dest_path, "w+", encoding="utf-8") as dfile:
             dfile.write(from_file)
+            print(f"[bright_black]Templated {dest_path}[/bright_black]")
         self.utils.match_permissions(from_path, dest_path)
         
     def write_configs(self):
@@ -64,7 +65,7 @@ class ConfigWriter:
 
         If a flavor is selected, merges the 'generic'
         templates/configs with the 'flavored' 
-        templates/configs, and writem to the target
+        templates/configs, and writes them to the target
         project folder.
         '''
         from_root = self.from_path / "generic"
@@ -88,6 +89,6 @@ class ConfigWriter:
                 if isinstance(self.flavor, str):
                     flavor_file = os.path.join(flavor_root, relative_file_path)
                     if flavor_file in flavor_files:
-                        self.utils.merge_configs(base_file=from_file, flavor_file=flavor_file, dest_file = dest_file)
+                        self.utils.merge_configs(base_file=from_file, flavor_file=flavor_file, dest_file=dest_file)
                         continue
                 self.write_config(from_file, dest_file)
