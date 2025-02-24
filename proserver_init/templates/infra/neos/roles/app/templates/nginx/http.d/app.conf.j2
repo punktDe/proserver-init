@@ -5,7 +5,7 @@ server {
     listen [::1]:87 proxy_protocol;
     {%- endif %}
 
-    server_name {{ app.domain }};
+    server_name {{ app.config.site_domain }};
 
     root /var/null;
 
@@ -23,7 +23,7 @@ server {
     listen [::1]:57 ssl http2 proxy_protocol;
     {%- endif %}
 
-    server_name {{ app.domain }};
+    server_name {{ app.config.site_domain }};
 
     root {{ app.prefix.current_release }}/Web;
 
@@ -87,8 +87,8 @@ server {
         fastcgi_read_timeout 600s;
     }
     
-    ssl_certificate {{ dehydrated | cert_fullchain(app.domain) }};
-    ssl_certificate_key {{ dehydrated | cert_privkey(app.domain) }};
-    ssl_trusted_certificate {{ dehydrated | cert_chain(app.domain) }};
+    ssl_certificate {{ dehydrated | cert_fullchain(app.config.site_domain) }};
+    ssl_certificate_key {{ dehydrated | cert_privkey(app.config.site_domain) }};
+    ssl_trusted_certificate {{ dehydrated | cert_chain(app.config.site_domain) }};
     include {{ nginx.prefix.config }}/include/https_params.conf;
 }

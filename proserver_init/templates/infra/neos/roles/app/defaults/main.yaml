@@ -3,7 +3,7 @@ app:
   config:
     smtp:
       host:
-      port: |
+      port: >-
         {{ '1025' if groups.mailhog is defined and inventory_hostname in groups.mailhog else '25' }}
       user:
       password:

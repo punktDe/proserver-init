@@ -4,5 +4,5 @@ app:
   prefix:
     config: /usr/local/etc
     current_release: /var/www/current
-    sudoers: |
+    sudoers: >-
       {{ '/usr/local/etc/sudoers.d' if ansible_system == 'FreeBSD' else '/etc/sudoers.d' }}
