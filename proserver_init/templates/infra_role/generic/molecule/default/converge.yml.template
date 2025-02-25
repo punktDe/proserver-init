@@ -3,6 +3,7 @@
   hosts: all
   environment:
     GITHUB_ACTIONS: "maybe"
+    ANSIBLE_HASH_BEHAVIOUR: merge
   tasks:
     - name: "Include {{ role_name }}"
       ansible.builtin.include_role:

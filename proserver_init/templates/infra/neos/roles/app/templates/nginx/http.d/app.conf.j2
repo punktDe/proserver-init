@@ -17,11 +17,12 @@ server {
 }
 
 server {
-    listen 0.0.0.0:443 ssl http2; 
-    listen [::]:443 ssl http2;
+    listen 0.0.0.0:443 ssl;
+    listen [::]:443 ssl;
     {% if ansible_local.proserver | default(none) and ansible_local.proserver.routing.with_gate64 -%}
-    listen [::1]:57 ssl http2 proxy_protocol;
+    listen [::1]:57 ssl proxy_protocol;
     {%- endif %}
+    http2 on;
 
     server_name {{ app.config.site_domain }};
 
@@ -83,10 +84,10 @@ server {
         fastcgi_param X-Forwarded-For $remote_addr;
         fastcgi_param X-Request-ID $ensure_request_id;
         fastcgi_param FLOW_CONTEXT Production;
-        fastcgi_pass unix:/var/run/php/php-fpm.sock;
+        fastcgi_pass unix:{{ php.fpm.pools.www.listen }};
         fastcgi_read_timeout 600s;
     }
-    
+
     ssl_certificate {{ dehydrated | cert_fullchain(app.config.site_domain) }};
     ssl_certificate_key {{ dehydrated | cert_privkey(app.config.site_domain) }};
     ssl_trusted_certificate {{ dehydrated | cert_chain(app.config.site_domain) }};

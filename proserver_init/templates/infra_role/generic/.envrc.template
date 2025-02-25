@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 if [ -n "$$DIRENV_DIFF" ]; then
   # Do not `set -e` unless we're being run from direnv
-  set -e 
+  set -e
 fi
 
 if [ ! -f venv-$role_name/bin/activate ]; then
@@ -14,3 +14,6 @@ echo "Activating the Python virtual environment"
 
 echo "Installing Python requirements"
 uv -q pip install -r requirements.txt
+
+export GITHUB_ACTIONS=maybe
+export ANSIBLE_HASH_BEHAVIOUR=merge

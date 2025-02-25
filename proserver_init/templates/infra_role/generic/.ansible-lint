@@ -5,6 +5,7 @@ skip_list:
   - name[template]
 
 warn_list:
+  - no-handler
   - package-latest
   - risky-shell-pipe
   - unnamed-task
