@@ -5,6 +5,6 @@
     GITHUB_ACTIONS: "maybe"
     ANSIBLE_HASH_BEHAVIOUR: merge
   tasks:
-    - name: "Include {{ role_name }}"
+    - name: "Include $role_name"
       ansible.builtin.include_role:
-        name: "{{ role_name }}"
+        name: "$role_name"

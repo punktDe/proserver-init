@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  author: "punkt.de"
+  license: "MIT"
+  role_name: $role_name_short
+  namespace: "punktde"
+  homepage: "https://punkt.de"
+  min_ansible_version: "2.15"
+
+
+platforms:
+  - name: Debian
+    versions:
+      - "12"
+  - name: Ubuntu
+    versions:
+      - "24.04"
+      - "22.04"
+  - name: FreeBSD
+    versions:
+      - "[Proserver](https://infrastructure.punkt.de/de/produkte/proserver.html)"

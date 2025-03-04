@@ -44,6 +44,7 @@ class InfraScaffolding:
         role_name = os.path.split(to_path)[1]
         config = {
                 "role_name": role_name,
+                "role_name_short": role_name.removeprefix("ansible-proserver-").removeprefix("ansible-")
                 }
         ConfigWriter(from_path, to_path, config, flavor=None).write_configs()
         os.chdir(to_path)
