@@ -31,7 +31,7 @@ jobs:
       - name: Run aar-doc
         run: |
           . .venv/bin/activate
-          aar-doc --config-file .aar-doc.yml . markdown
+          aar-doc --output-mode replace --config-file .aar-doc.yml . markdown
 
       - name: Output diff
         run: git diff README.md
