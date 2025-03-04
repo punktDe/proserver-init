@@ -3,6 +3,8 @@ name: Generate README.md for the role
 
 on:
   push:
+    tags-ignore:
+      - '**'
   workflow_dispatch:
 
 permissions:
