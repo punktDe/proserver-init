@@ -17,6 +17,17 @@ output_template: |
 
   {% for entrypoint in argument_specs.keys() %}
 
+  {% if "description" in argument_specs[entrypoint] %}
+  {%- if argument_specs[entrypoint].description is string -%}
+  {{ argument_specs[entrypoint].description }}
+  {% else %}
+  {%- for line in argument_specs[entrypoint].description -%}
+  {{ line }}
+
+  {% endfor -%}
+  {% endif -%}
+  {% endif -%}
+
   {% if entrypoint_options[entrypoint] | length > 1 -%}
   {% for path, options in entrypoint_options[entrypoint][1:] -%}
   #### Options for `{{ path | reject('eq', 'main') | join(".") }}`
@@ -71,7 +82,7 @@ output_template: |
   ```yaml
   roles:
     - name: {{ role }}
-      src: https://github.com/punktDe/ansible-proserver-elasticsearch
+      src: https://github.com/punktDe/$role_name
   ```
 
   Afterwards, install the role by running `ansible-galaxy install -r requirements.yml`
@@ -81,7 +92,7 @@ output_template: |
   ```yaml
   - hosts: all
     roles:
-      - name: elasticsearch
+      - name: $role_name_short
   ```
 
   <!-- END_ANSIBLE_DOCS -->
