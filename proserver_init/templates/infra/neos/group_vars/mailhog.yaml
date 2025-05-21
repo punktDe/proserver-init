@@ -1,0 +1,3 @@
+---
+mailhog:
+  domain: "mailhog.{{ inventory_hostname }}"
