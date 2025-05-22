@@ -3,6 +3,13 @@ output_file: README.md
 output_mode: replace
 output_template: |
   <!-- BEGIN_ANSIBLE_DOCS -->
+  <!--
+  Do not edit README.md directly!
+
+  This file is generated automatically by aar-doc and will be overwritten.
+
+  Please edit meta/argument_specs.yml instead.
+  -->
   # {{ role }}
 
   {{ metadata.galaxy_info.description }}
