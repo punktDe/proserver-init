@@ -1,0 +1,13 @@
+---
+app:
+  config:
+    solr:
+      host: "127.0.0.1"
+      port: "8983"
+      core: core_de
+      user: solr
+      password: solr
+    mysql:
+      database: "{{ mariadb.databases.app.name }}"
+      username: "{{ mariadb.users.app.username }}"
+      password: "{{ mariadb.users.app.password }}"

@@ -1,0 +1,5 @@
+---
+mariadb:
+  users:
+    app:
+      password: "{{ secrets.app_stg_mariadb_password }}"

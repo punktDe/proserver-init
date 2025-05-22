@@ -1,0 +1,6 @@
+---
+elasticsearch:
+  users:
+    builtin:
+      elastic:
+        password: "{{ secrets.app_prd_elasticsearch_elastic_password }}"
