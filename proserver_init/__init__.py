@@ -3,10 +3,12 @@ import os
 import argparse
 from .infra import InfraScaffolding
 from .constants import FROM_PATH
+from importlib.metadata import version
 
 def main():
     parser = argparse.ArgumentParser(prog='proserver-init', description='Initialize a Punkt.de project')
     parser.add_argument('-p', '--project-dir', type=str, help='path to the project', dest='project_dir', required=False, default=os.getcwd())
+    parser.add_argument('-v', '--version', action='version', version=version('proserver-init'))
     subparsers = parser.add_subparsers(help='type of the project', dest='project_type', required=True)
     parser_infra = subparsers.add_parser('infra', help='')
     parser_infra.add_argument('-f', '--flavor', choices=('typo3', 'neos', 'spiral'), help='flavor of the project', required=False, default=None)
