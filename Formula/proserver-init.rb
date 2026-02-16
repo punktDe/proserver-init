@@ -6,7 +6,7 @@ class ProserverInit < Formula
 
   head "https://github.com/punktDe/proserver-init", :using => :git, :branch => "main"
 
-  url "https://github.com/punktDe/proserver-init", :using => :git, :tag => "0.9.0"
+  url "https://github.com/punktDe/proserver-init", :using => :git, :tag => "0.9.1"
 
   depends_on "python@3.13"
   depends_on "uv"
