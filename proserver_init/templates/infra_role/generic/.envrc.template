@@ -17,3 +17,4 @@ uv -q pip install -r requirements.txt
 
 export GITHUB_ACTIONS=maybe
 export ANSIBLE_HASH_BEHAVIOUR=merge
+export ANSIBLE_ROLES_PATH=roles
