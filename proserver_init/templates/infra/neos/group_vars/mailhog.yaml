@@ -1,3 +1,7 @@
 ---
 mailhog:
-  domain: "mailhog.{{ inventory_hostname }}"
+  domain: "mailhog.vpro000.proserver.punkt.de"
+
+dehydrated:
+  domains:
+    mailhog.vpro0000.proserver.punkt.de: []

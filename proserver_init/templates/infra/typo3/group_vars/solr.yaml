@@ -1,0 +1,11 @@
+---
+solr:
+  domain: "solr.vpro0000.proserver.punkt.de"
+  oauth2_proxy: main
+  version: 9.8.0
+  tika:
+    version: 3.1.0
+
+dehydrated:
+  domains:
+    solr.vpro0000.proserver.punkt.de: []

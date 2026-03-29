@@ -1,0 +1,15 @@
+---
+mariadb:
+  databases:
+    app:
+      name: "$project_organization-{{ environment_name_abbrev }}-app"
+  users:
+    app:
+      username: "$project_organization-{{ environment_name_abbrev }}-app"
+      password:
+      privileges:
+        app: "$project_organization-{{ environment_name_abbrev }}-app.*:all"
+      hosts:
+        app:
+          - 127.0.0.1
+          - localhost
