@@ -149,3 +149,37 @@ with an executable script printing the password on stdout, and overrides the
 README documents its own setup. Ansible runs `vault_password_file` when it is
 executable and reads it as a password otherwise, so the two work the same way
 from the playbook's side.
+
+## Development
+
+`.envrc` builds `venv-ptinit` from `requirements.txt`, but it does not install
+the project itself, so a fresh checkout has no `proserver-init` command yet:
+
+```bash
+direnv allow                    # or: source .envrc
+uv pip install -e . --no-deps
+```
+
+The editable install is what puts `proserver-init` on the PATH. It is also
+where `--version` reads the version from, so without it the command fails with
+`PackageNotFoundError` rather than simply being missing.
+
+From then on `proserver-init` runs this working copy:
+
+```bash
+proserver-init --version
+proserver-init -p /tmp/example-infrastructure infra -f typo3
+proserver-init --overlay-path ./my-overlay -p /tmp/example-infrastructure infra -f typo3
+```
+
+Changes to the code and to the templates take effect straight away, with no
+reinstall: the templates are read from the source tree, and a new directory
+under `templates/infra` shows up as a flavor on the next run. Only a change to
+`pyproject.toml`, such as the version or the entry point, needs the install
+repeating.
+
+Generating a project is not a dry run. It writes the target directory, sources
+its `.envrc`, installs the Ansible roles named in its `requirements.yaml`, and
+runs `git init` and `pre-commit install` in it, so point `-p` at a throwaway
+directory. The name has to end in `-infrastructure`, and the part before that
+becomes the organization name.
