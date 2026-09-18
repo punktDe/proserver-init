@@ -43,8 +43,8 @@ class Utils:
         Utils().program_installed("git", fail_if_not_installed=True)
         if not os.path.exists(".git"):
             subprocess.run(["git", "init"])
-            if not os.path.exists(".git/hooks/pre-commit"):
-                subprocess.run(["pre-commit", "install"])
+        if not os.path.exists(".git/hooks/pre-commit"):
+            subprocess.run(["pre-commit", "install"])
         subprocess.run(["pre-commit", "autoupdate"])
 
 
