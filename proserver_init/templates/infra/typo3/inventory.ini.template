@@ -33,3 +33,14 @@ solr
 solr
 
 [apache]
+
+# The solr hosts join the environment and secrets groups, so that they see
+# environment_name_abbrev and the vault.
+[production:children]
+solr_prd
+
+[staging:children]
+solr_stg
+
+[secrets:children]
+solr
