@@ -27,7 +27,7 @@ pre-commit install
 
 ### Run Ansible playbook
 ```sh
-ansible-playbook $project_organization.yaml --limit staging
+ansible-playbook playbook.yaml --limit staging
 ```
 
 ### Environment variables

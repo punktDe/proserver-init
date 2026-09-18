@@ -16,11 +16,11 @@ echo "Installing Python requirements"
 uv -q pip install -r requirements.txt
 
 # Install Ansible roles
-roles=$$(yq ".roles.[].name" requirements.yml | sed 's/"//g')
+roles=$$(yq ".roles.[].name" requirements.yaml | sed 's/"//g')
 for role in $$roles; do
   if ! [ -d "roles/$$role" ]; then
       echo "Installing Ansible roles"
-      ansible-galaxy install -r requirements.yml
+      ansible-galaxy install -r requirements.yaml
       break
   fi
 done

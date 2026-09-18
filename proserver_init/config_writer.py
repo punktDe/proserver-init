@@ -34,7 +34,7 @@ class ConfigWriter:
             tmp_file = os.path.join(os.path.split(dest_path)[0], "." + os.path.split(dest_path)[1] + ".tmp")
             with open(tmp_file, 'w') as f:
                 f.write(from_file)
-            never_replace = ["roles/app", "host_vars", "group_vars", "requirements.yml", "README.md", "inventory.ini", "vault_password_file"] 
+            never_replace = ["roles/app", "host_vars", "group_vars", "requirements.yml", "requirements.yaml", "README.md", "inventory.ini", "vault_password_file"] 
             if cmp(tmp_file, dest_path, shallow=False) or any(pattern in dest_path for pattern in never_replace):
                 if os.path.exists(tmp_file):
                     os.remove(tmp_file)
