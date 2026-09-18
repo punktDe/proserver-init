@@ -11,7 +11,7 @@ def main():
     parser.add_argument('-v', '--version', action='version', version=version('proserver-init'))
     subparsers = parser.add_subparsers(help='type of the project', dest='project_type', required=True)
     parser_infra = subparsers.add_parser('infra', help='')
-    parser_infra.add_argument('-f', '--flavor', choices=('typo3', 'neos', 'spiral'), help='flavor of the project', required=False, default=None)
+    parser_infra.add_argument('-f', '--flavor', choices=InfraScaffolding.available_flavors(FROM_PATH), help='flavor of the project', required=False, default=None)
     parser_infra_role = subparsers.add_parser('infra-role', help='')
     args = parser.parse_args()
     if args.project_type == "infra" and not "-infrastructure" in args.project_dir:

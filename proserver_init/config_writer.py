@@ -77,6 +77,9 @@ class ConfigWriter:
         merged_from_root = tempfile.TemporaryDirectory().name
         if isinstance(self.flavor, str):
             flavor_root = os.path.join(self.from_path, self.flavor)
+            if not os.path.isdir(flavor_root):
+                print(f":x: [red]ERROR:[/red] No templates found for the flavor '{self.flavor}'")
+                exit(1)
             flavor_files = [os.path.join(dp, f) for dp, _, filenames in os.walk(flavor_root) for f in filenames]
             from_files = [os.path.join(dp, f) for dp, _, filenames in os.walk(from_root) for f in filenames]
             unflavored_files = [file for file in from_files if os.path.relpath(file, start=from_root) not in [os.path.relpath(ffile, start=flavor_root) for ffile in flavor_files]]

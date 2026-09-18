@@ -42,4 +42,3 @@ Available flavors:
 
 - typo3
 - neos
-- spiral

@@ -10,6 +10,17 @@ class InfraScaffolding:
     def __init__(self):
         self.utils = Utils()
 
+    @staticmethod
+    def available_flavors(from_path) -> tuple:
+        '''
+        Lists the flavors that have a template directory,
+        so that the CLI never offers a flavor which would
+        silently fall back to the generic templates.
+        '''
+        flavors_path = from_path / "templates" / "infra"
+        return tuple(sorted(entry.name for entry in flavors_path.iterdir()
+                            if entry.is_dir() and entry.name != "generic"))
+
     def init_project(self, from_path, to_path, flavor = "generic"):
         from_path = from_path / "templates" / "infra"
         directory_structure = [
