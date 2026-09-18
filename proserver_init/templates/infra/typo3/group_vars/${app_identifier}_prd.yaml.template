@@ -1,0 +1,33 @@
+---
+app:
+  context: Production/Live
+  domain: ${app_identifier}.prd.${project_organization}.${domain_suffix}
+  oauth2_proxy: main
+  config:
+    encryption_key: '{{ secrets.${app_identifier}.prd.encryption_key }}'
+    solr:
+      host: "{{ groups.solr_prd | map('extract', hostvars) | map(attribute='solr.domain') | first }}"
+      user: solr
+      port: 443
+      scheme: https
+      password: "{{ groups.solr_prd | map('extract', hostvars) | map(attribute='oauth2_proxy.config.solr.htpasswd_file.solr') | first }}"
+      core_de: core_de
+
+oauth2_proxy:
+  config:
+    main:
+      client_id: ${project_organization}-${app_identifier}-prd
+      client_secret: "{{ secrets.${app_identifier}.prd.oauth2_proxy.client_secret }}"
+      cookie_secret: "{{ secrets.${app_identifier}.prd.oauth2_proxy.cookie_secret }}"
+      htpasswd_file:
+        ${project_organization}: "{{ secrets.${app_identifier}.prd.oauth2_proxy.htpasswd_file.${project_organization} }}"
+
+dehydrated:
+  domains:
+    ${app_identifier}.prd.${project_organization}.${domain_suffix}: []
+    mail.prd.${project_organization}.${domain_suffix}: []
+
+mariadb:
+  users:
+    ${app_identifier}:
+      password: '{{ secrets.${app_identifier}.prd.mariadb.password }}'

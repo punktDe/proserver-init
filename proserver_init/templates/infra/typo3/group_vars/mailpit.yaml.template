@@ -1,0 +1,4 @@
+---
+mailpit:
+  domain: mail.{{ environment_name_abbrev }}.${project_organization}.${domain_suffix}
+  oauth2_proxy: main

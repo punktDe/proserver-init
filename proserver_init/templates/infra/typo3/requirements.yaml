@@ -1,18 +1,24 @@
 ---
 roles:
-  - name: solr
-    src: https://github.com/punktDe/ansible-proserver-solr
   - name: mail
     src: https://github.com/punktDe/ansible-proserver-mail
-  - name: mailhog
-    src: https://github.com/punktDe/ansible-proserver-mailhog
+    version: 1.0.0
+  - name: mailpit
+    src: https://github.com/punktDe/ansible-proserver-mailpit
   - name: mariadb
     src: https://github.com/punktDe/ansible-proserver-mariadb
+    version: 5.0.1
   - name: oauth2_proxy
     src: https://github.com/punktDe/ansible-proserver-oauth2-proxy
+    version: 2.0.4
   - name: php
     src: https://github.com/punktDe/ansible-proserver-php
+    version: 4.0.1
   - name: redis
     src: https://github.com/punktDe/ansible-proserver-redis
+    version: 1.0.1
+  - name: solr
+    src: https://github.com/punktDe/ansible-proserver-solr
+    version: solrv10
   - name: supervisord
     src: https://github.com/punktDe/ansible-proserver-supervisord

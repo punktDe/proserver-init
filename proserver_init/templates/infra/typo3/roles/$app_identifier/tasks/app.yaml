@@ -1,0 +1,7 @@
+---
+- name: Make sure the current release folder exists for app
+  ansible.builtin.file:
+    path: "{{ app.prefix.current_release }}"
+    state: directory
+    owner: proserver
+    mode: "0755"
