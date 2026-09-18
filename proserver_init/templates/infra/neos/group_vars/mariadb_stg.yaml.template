@@ -2,4 +2,4 @@
 mariadb:
   users:
     ${app_identifier}:
-      password: "{{ secrets.app_stg_mariadb_password }}"
+      password: "{{ secrets.${app_identifier}.stg.mariadb.password }}"
