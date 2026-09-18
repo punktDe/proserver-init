@@ -29,15 +29,6 @@ pre-commit install
 ansible-playbook $playbook_filename --limit staging
 ```
 
-### Layout
-The application is called `$app_identifier` throughout this project. That name is
-used for the role in `roles/$app_identifier`, the inventory groups
-`$app_identifier`, `${app_identifier}_stg` and `${app_identifier}_prd`, the matching files
-in `group_vars`, the nginx site and the deployment directory under `/var/www`.
-
-The role's own variables stay under the `app` key regardless of that name, so
-`app.domain` and `app.config` are the same in every generated project.
-
 ### Environment variables
 Values are taken from `app.config` dictionary, and are transformed using a filter plugin.
 
