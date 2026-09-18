@@ -6,9 +6,9 @@ roles:
   - name: mail
     src: https://github.com/punktDe/ansible-proserver-mail
     version: 1.0.0
-  - name: mailhog
-    src: https://github.com/punktDe/ansible-proserver-mailhog
-    version: 1.0.0
+  - name: mailpit
+    src: https://github.com/punktDe/ansible-proserver-mailpit
+    version: 1.0.2
   - name: mariadb
     src: https://github.com/punktDe/ansible-proserver-mariadb
     version: 5.0.2

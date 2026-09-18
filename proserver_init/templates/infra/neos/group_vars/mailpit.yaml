@@ -1,0 +1,3 @@
+---
+mailpit:
+  domain: "mail.{{ inventory_hostname }}"

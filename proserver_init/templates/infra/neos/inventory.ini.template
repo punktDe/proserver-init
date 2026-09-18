@@ -1,6 +1,6 @@
 
-[mailhog]
-[mailhog:children]
+[mailpit]
+[mailpit:children]
 app_stg
 
 [mariadb]
