@@ -83,6 +83,7 @@ How a later layer combines with the one below it depends on the file:
 | `.yaml` / `.yml` mapping | merged key by key |
 | `.yaml` / `.yml` sequence | appended, as text, so formatting and comments survive |
 | `.ini` | appended, which is how a flavor adds inventory groups |
+| `.ini` above a `#@hosts` line | placed where the layer below has its own `#@hosts` line |
 | anything else | replaced by the later layer |
 | a file only the later layer has | copied in as it is |
 
@@ -98,6 +99,10 @@ How a later layer combines with the one below it depends on the file:
   other instead of merging.
 - `values.yaml` at the root of a layer is not copied into the project. It
   supplies substitution values, and a later layer overrides them.
+- A `#@hosts` line marks where a later layer's inventory hosts go. Content
+  above a flavor's own `#@hosts` line is placed there rather than appended, so
+  a flavor's hosts sit with the other hosts while its groups stay at the
+  bottom. The markers are removed from the generated file.
 
 ## Overlays
 
@@ -121,6 +126,17 @@ proserver-init --overlay my-overlay infra -f typo3
 ```
 
 The public templates ship no organization-specific values: the identity
-provider, the secrets manager, the git remote and the DNS suffix are all empty
-or example values, and no CI configuration is generated. An overlay is the
-supported way to fill them in.
+provider, the git remote and the DNS suffix are empty or example values, no CI
+configuration is generated, and no particular secrets manager is assumed.
+
+### The Ansible Vault password
+
+A generated project gets a random Ansible Vault password written into
+`vault_password_file`, which is git-ignored and readable only by its owner.
+
+An overlay that reads the password from a secrets manager replaces that file
+with an executable script printing the password on stdout, and overrides the
+`brew_packages` and `vault_password_instructions` values so that the generated
+README documents its own setup. Ansible runs `vault_password_file` when it is
+executable and reads it as a password otherwise, so the two work the same way
+from the playbook's side.

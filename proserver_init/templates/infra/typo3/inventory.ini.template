@@ -1,9 +1,10 @@
-
 [solr_prd]
 solr.prd.${project_organization}.${domain_suffix} ansible_user=vpro0002
 
 [solr_stg]
 solr.stg.${project_organization}.${domain_suffix} ansible_user=vpro0003
+
+#@hosts
 
 [solr]
 [solr:children]

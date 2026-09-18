@@ -1,7 +1,7 @@
 import os
 from string import Template
 from .utils import Utils
-from .constants import VALUES_FILE
+from .constants import VALUES_FILE, INVENTORY_MARKER
 from filecmp import cmp
 from rich import print
 import tempfile
@@ -38,7 +38,31 @@ class ConfigWriter:
         merged_root = tempfile.mkdtemp(prefix="proserver-init-")
         for layer_path in self.layer_paths:
             self.apply_layer(layer_path, merged_root)
+        self.strip_markers(merged_root)
         return merged_root
+
+    def strip_markers(self, merged_root: str) -> None:
+        '''
+        Drops the insertion markers once every layer has been applied.
+        They only exist to tell the layers where to put things and mean
+        nothing in a generated project.
+        '''
+        for root, _, files in os.walk(merged_root):
+            for file in files:
+                path = os.path.join(root, file)
+                with open(path, 'r', encoding="utf-8") as f:
+                    lines = f.readlines()
+                if not any(line.strip() == INVENTORY_MARKER for line in lines):
+                    continue
+                kept = []
+                for line in lines:
+                    if line.strip() == INVENTORY_MARKER:
+                        continue
+                    if not line.strip() and kept and not kept[-1].strip():
+                        continue
+                    kept.append(line)
+                with open(path, 'w', encoding="utf-8") as f:
+                    f.write("".join(kept))
 
     def apply_layer(self, layer_path: str, merged_root: str) -> None:
         for root, _, files in os.walk(layer_path):

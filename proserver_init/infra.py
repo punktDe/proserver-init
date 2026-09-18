@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import secrets
 from pathlib import Path
 from .utils import Utils
 from .config_writer import ConfigWriter
@@ -72,9 +73,11 @@ class InfraScaffolding:
                 "app_identifier": app_identifier,
                 "app_identifier_title": app_identifier.capitalize(),
                 "playbook_filename": playbook_filename,
+                "vault_password": secrets.token_urlsafe(32),
                 }
         layers = self.layer_paths(from_path, "infra", flavor, overlay_root)
         ConfigWriter(layers, to_path, config).write_configs()
+        self.utils.protect_secret_file(os.path.join(to_path, "vault_password_file"))
         os.chdir(to_path)
         self.utils.project_post_init()
         print(infrastructure_success.format(config['project_name']))

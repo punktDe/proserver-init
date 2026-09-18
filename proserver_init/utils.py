@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import os
 from rich import print
+from .constants import INVENTORY_MARKER
 from .help_strings import direnv_not_installed
 
 class Utils:
@@ -121,10 +122,24 @@ class Utils:
             self.yaml.dump(dest_yaml, f)
 
     def append_file(self, base_file: str, flavor_file: str, dest_file: str) -> None:
+        '''
+        Appends one layer's file to the layer below it. A later layer can
+        lift part of its content higher up by marking it: everything above
+        its INVENTORY_MARKER line is placed where the base has that marker,
+        and the rest is appended. That is what lets a flavor add its hosts
+        next to the other hosts while its groups stay at the bottom.
+        '''
         with open(base_file, 'r', encoding="utf-8") as f:
             base = f.read()
         with open(flavor_file, 'r', encoding="utf-8") as f:
             flavor = f.read()
+        if INVENTORY_MARKER in flavor:
+            marked, flavor = flavor.split(INVENTORY_MARKER, 1)
+            if INVENTORY_MARKER in base:
+                base = base.replace(INVENTORY_MARKER,
+                                    marked.strip("\n") + "\n\n" + INVENTORY_MARKER, 1)
+            else:
+                flavor = marked + flavor
         if base and not base.endswith("\n"):
             base += "\n"
         with open(dest_file, 'w', encoding="utf-8") as f:
@@ -147,7 +162,16 @@ class Utils:
         elif extension == ".ini":
             self.append_file(base_file, flavor_file, dest_file)
         else:
-            shutil.copyfile(flavor_file, dest_file)
+            shutil.copy(flavor_file, dest_file)
+
+    def protect_secret_file(self, file_path: str) -> None:
+        '''
+        Takes the group and world bits off a file holding a secret. An
+        executable file is left alone: it is a script that fetches the
+        secret from somewhere else rather than the secret itself.
+        '''
+        if os.path.exists(file_path) and not os.access(file_path, os.X_OK):
+            os.chmod(file_path, 0o600)
 
     def match_permissions(self, src_file_path: str, dest_file_path: str) -> None:
         src_file_permissions = str(oct(os.stat(src_file_path).st_mode)[-3:])

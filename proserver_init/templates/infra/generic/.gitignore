@@ -8,6 +8,9 @@ __pycache__
 /venv/
 debug.log
 id_ed25519*
+# Holds the Ansible Vault password in cleartext. An overlay that replaces it
+# with a secrets-manager script can drop this line.
+vault_password_file
 /venv*/
 .collections
 .ansible
