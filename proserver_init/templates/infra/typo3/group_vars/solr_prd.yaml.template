@@ -9,8 +9,9 @@ solr:
 oauth2_proxy:
   config:
     solr:
-      client_id: ${project_organization}-solr-prd
-      client_secret: "{{ secrets.solr.prd.oauth2_proxy.client_secret }}"
-      cookie_secret: "{{ secrets.solr.prd.oauth2_proxy.cookie_secret }}"
+      # The same client as the application, so the same secret.
+      client_id: ${project_organization}-${app_identifier}-prd
+      client_secret: "{{ secrets['${app_identifier}'].prd.oauth2_proxy.client_secret }}"
+      cookie_secret: "{{ secrets['solr'].prd.oauth2_proxy.cookie_secret }}"
       htpasswd_file:
-        solr: "{{ secrets.solr.prd.oauth2_proxy.htpasswd_file.solr }}"
+        solr: "{{ secrets['solr'].prd.oauth2_proxy.htpasswd_file['solr'] }}"
