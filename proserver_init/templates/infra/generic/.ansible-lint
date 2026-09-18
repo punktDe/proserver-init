@@ -12,6 +12,7 @@ exclude_paths:
   - group_vars/secrets.*
   - roles/dehydrated
   - roles/mailhog
+  - roles/mailpit
   - roles/postgresql
   - roles/mail
   - roles/mariadb

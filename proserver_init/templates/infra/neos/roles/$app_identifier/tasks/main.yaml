@@ -1,3 +1,4 @@
+---
 
 - name: Handle nginx configuration
   ansible.builtin.include_tasks: nginx.yaml

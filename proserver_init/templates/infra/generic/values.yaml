@@ -1,0 +1,13 @@
+---
+# Substitution values for the templates in this layer. An overlay can
+# override any of them from its own values.yaml without restating the
+# files that use them.
+
+# Where the generated project is cloned from, used in the README.
+git_remote: git@github.com:your-organization
+
+# DNS suffix the generated inventory and certificates use.
+domain_suffix: example.com
+
+# Secrets manager the vault_password_file talks to, used in the README.
+vault_server: your-bitwarden-server

@@ -7,10 +7,10 @@
   roles:
     - system
 
-- name: App
-  hosts: app
+- name: ${app_identifier_title}
+  hosts: ${app_identifier}
   become: yes
   tags:
-    - app
+    - ${app_identifier}
   roles:
-    - app
+    - ${app_identifier}

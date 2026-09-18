@@ -1,15 +1,15 @@
 ---
 mariadb:
   databases:
-    app:
-      name: "$project_organization-{{ environment_name_abbrev }}-app"
+    ${app_identifier}:
+      name: "$project_organization-{{ environment_name_abbrev }}-${app_identifier}"
   users:
-    app:
-      username: "$project_organization-{{ environment_name_abbrev }}-app"
+    ${app_identifier}:
+      username: "$project_organization-{{ environment_name_abbrev }}-${app_identifier}"
       password:
       privileges:
-        app: "$project_organization-{{ environment_name_abbrev }}-app.*:all"
+        ${app_identifier}: "$project_organization-{{ environment_name_abbrev }}-${app_identifier}.*:all"
       hosts:
-        app:
+        ${app_identifier}:
           - 127.0.0.1
           - localhost

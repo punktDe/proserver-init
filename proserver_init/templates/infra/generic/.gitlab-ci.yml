@@ -1,5 +1,0 @@
----
-include:
-  - component: git.punkt.de/pt/ci-components/ansible-playbook@main
-    inputs:
-      playbook_file: "playbook.yaml"

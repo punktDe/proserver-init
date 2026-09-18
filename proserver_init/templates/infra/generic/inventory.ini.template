@@ -1,0 +1,22 @@
+[${app_identifier}_prd]
+${app_identifier}.prd.${project_organization}.${domain_suffix} ansible_user=vpro0000
+
+[${app_identifier}_stg]
+${app_identifier}.stg.${project_organization}.${domain_suffix} ansible_user=vpro0001
+
+[${app_identifier}]
+[${app_identifier}:children]
+${app_identifier}_stg
+${app_identifier}_prd
+
+[production]
+[production:children]
+${app_identifier}_prd
+
+[staging]
+[staging:children]
+${app_identifier}_stg
+
+[secrets]
+[secrets:children]
+${app_identifier}
