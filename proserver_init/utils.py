@@ -1,8 +1,8 @@
-import re
 from typing import Dict
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
 from ruamel.yaml.parser import ParserError
+import shutil
 import subprocess
 import os
 from rich import print
@@ -12,6 +12,7 @@ class Utils:
     yaml=YAML()
     yaml.explicit_start = True
     yaml.indent(mapping=2, sequence=4, offset=2)
+    yaml.width = 4096
 
 
     @staticmethod
@@ -65,28 +66,88 @@ class Utils:
                 merged_dict[key] = value
         return merged_dict
 
-    def merge_yaml(self, base_file: str, flavor_file: str, dest_file: str) -> None:
+    def load_yaml(self, file_path: str):
+        with open(file_path, 'r', encoding="utf-8") as f:
+            return self.yaml.load(f)
+
+    def merge_documents(self, base, flavor):
+        '''
+        Merges two parsed YAML documents. Mappings are merged key by
+        key, sequences are appended to one another, and anything else
+        is replaced by the later layer.
+        '''
+        if isinstance(base, dict) and isinstance(flavor, dict):
+            return self.merge_dicts(base, flavor)
+        if isinstance(base, list) and isinstance(flavor, list):
+            merged = base.copy()
+            merged.extend(flavor)
+            return merged
+        return flavor
+
+    def append_yaml_sequences(self, base_file: str, flavor_file: str, dest_file: str) -> None:
+        '''
+        Appends one root level YAML sequence to another as text. Dumping
+        the merged document would re-indent and re-wrap all of it, so the
+        items are concatenated instead, which leaves comments, quoting
+        and line breaks of both layers untouched.
+        '''
         with open(base_file, 'r', encoding="utf-8") as f:
-            base_yaml = self.yaml.load(f)
+            base = f.read()
         with open(flavor_file, 'r', encoding="utf-8") as f:
-            flavor_yaml = self.yaml.load(f)
-        dest_yaml = self.merge_dicts(base_yaml, flavor_yaml)
-        with open(dest_file, 'w+', encoding="utf-8") as f:
+            flavor_lines = f.readlines()
+        while flavor_lines and flavor_lines[0].strip() in ("", "---"):
+            flavor_lines.pop(0)
+        if base and not base.endswith("\n"):
+            base += "\n"
+        if base and not base.endswith("\n\n"):
+            base += "\n"
+        with open(dest_file, 'w', encoding="utf-8") as f:
+            f.write(base + "".join(flavor_lines))
+
+    def merge_yaml(self, base_file: str, flavor_file: str, dest_file: str) -> None:
+        try:
+            base_yaml = self.load_yaml(base_file)
+            flavor_yaml = self.load_yaml(flavor_file)
+        except (ScannerError, ParserError) as error:
+            print(f"[yellow]Warning![/yellow] {dest_file} could not be parsed as YAML "
+                  f"({error.__class__.__name__}), so the later layer replaces it")
+            shutil.copyfile(flavor_file, dest_file)
+            return
+        if isinstance(base_yaml, list) and isinstance(flavor_yaml, list):
+            self.append_yaml_sequences(base_file, flavor_file, dest_file)
+            return
+        dest_yaml = self.merge_documents(base_yaml, flavor_yaml)
+        with open(dest_file, 'w', encoding="utf-8") as f:
             self.yaml.dump(dest_yaml, f)
 
+    def append_file(self, base_file: str, flavor_file: str, dest_file: str) -> None:
+        with open(base_file, 'r', encoding="utf-8") as f:
+            base = f.read()
+        with open(flavor_file, 'r', encoding="utf-8") as f:
+            flavor = f.read()
+        if base and not base.endswith("\n"):
+            base += "\n"
+        with open(dest_file, 'w', encoding="utf-8") as f:
+            f.write(base + flavor)
+
     def merge_configs(self, base_file: str, flavor_file: str, dest_file: str) -> None:
-        try:
+        '''
+        Merges one layer's file into the layer below it. YAML is merged
+        document by document, inventories are appended so that a flavor
+        can add host groups, and every other file is replaced outright
+        by the later layer.
+
+        Reads both inputs before writing, so the destination may be the
+        same file as the base.
+        '''
+        effective_name = os.path.split(dest_file)[1].replace(".template", "")
+        extension = os.path.splitext(effective_name)[1]
+        if extension in (".yaml", ".yml"):
             self.merge_yaml(base_file, flavor_file, dest_file)
-            return
-        except (ScannerError, AttributeError, ParserError):
-            for filename in [base_file, flavor_file, dest_file]:
-                if re.search(r"ya?ml", filename) and not "template" in filename:
-                    print(f"[yellow]Warning![/yellow] File {filename} is not a valid YAML file!")
-        with open(base_file, 'r', encoding="utf-8") as bfile, \
-             open(flavor_file, 'r', encoding="utf-8") as ffile, \
-             open(dest_file, 'w+', encoding="utf-8") as dfile:
-            for line in (bfile.readlines() + ffile.readlines()):
-                dfile.write(line)
+        elif extension == ".ini":
+            self.append_file(base_file, flavor_file, dest_file)
+        else:
+            shutil.copyfile(flavor_file, dest_file)
 
     def match_permissions(self, src_file_path: str, dest_file_path: str) -> None:
         src_file_permissions = str(oct(os.stat(src_file_path).st_mode)[-3:])
