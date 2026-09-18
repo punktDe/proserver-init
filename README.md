@@ -82,8 +82,9 @@ How a later layer combines with the one below it depends on the file:
 | --- | --- |
 | `.yaml` / `.yml` mapping | merged key by key |
 | `.yaml` / `.yml` sequence | appended, as text, so formatting and comments survive |
-| `.ini` | appended, which is how a flavor adds inventory groups |
+| `.ini`, `.gitignore`, `.gitattributes` | appended, which is how a flavor adds inventory groups |
 | `.ini` above a `#@hosts` line | placed where the layer below has its own `#@hosts` line |
+| `.cfg` | merged setting by setting, keeping the lower layer's comments and order |
 | anything else | replaced by the later layer |
 | a file only the later layer has | copied in as it is |
 
@@ -112,11 +113,15 @@ forking them. It mirrors the template layout and holds only the deltas:
 ```
 my-overlay/
   infra/generic/values.yaml            # substitution values
-  infra/generic/ansible.cfg            # replaces the public one
+  infra/generic/ansible.cfg            # just the settings it changes
+  infra/generic/.gitignore             # just the lines it adds
   infra/generic/inventory.py           # a file the public templates do not have
   infra/generic/group_vars/all.yaml    # merged into the public group_vars/all.yaml
   infra/typo3/group_vars/${app_identifier}.yaml.template
 ```
+
+Every one of those is a delta. No file in an overlay restates the public
+template it changes, which is what keeps the two from drifting apart.
 
 Point at one by path, or by name if it lives in `~/.config/proserver-init/overlays`:
 

@@ -2,11 +2,12 @@ from typing import Dict
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
 from ruamel.yaml.parser import ParserError
+import re
 import shutil
 import subprocess
 import os
 from rich import print
-from .constants import INVENTORY_MARKER
+from .constants import INVENTORY_MARKER, APPEND_FILES, KEY_VALUE_EXTENSIONS
 from .help_strings import direnv_not_installed
 
 class Utils:
@@ -148,6 +149,77 @@ class Utils:
         with open(dest_file, 'w', encoding="utf-8") as f:
             f.write(base + flavor)
 
+    SECTION = re.compile(r"\s*\[(?P<name>.+)\]\s*$")
+    SETTING = re.compile(r"\s*(?P<key>[^#;=\s][^=]*?)\s*=")
+
+    def scan_settings(self, lines: list):
+        '''
+        Maps every (section, key) to the line that sets it, and every
+        section to the line after its last setting.
+        '''
+        section = ""
+        settings = {}
+        ends = {"": 0}
+        for index, line in enumerate(lines):
+            match = self.SECTION.match(line)
+            if match:
+                section = match.group("name")
+                ends[section] = index + 1
+                continue
+            if line.strip():
+                ends[section] = index + 1
+            match = self.SETTING.match(line)
+            if match:
+                settings[(section, match.group("key"))] = index
+        return settings, ends
+
+    def merge_key_values(self, base_file: str, flavor_file: str, dest_file: str) -> None:
+        '''
+        Merges a `key = value` config file setting by setting. A key the
+        later layer sets replaces the same key in the same section below
+        it, a new key is added to its section, and a section that is not
+        there yet is appended. The lower layer keeps its comments and its
+        order, so an overlay only has to carry the settings it changes.
+        '''
+        with open(base_file, 'r', encoding="utf-8") as f:
+            base_lines = f.readlines()
+        with open(flavor_file, 'r', encoding="utf-8") as f:
+            flavor_lines = f.readlines()
+        settings, ends = self.scan_settings(base_lines)
+        replacements = {}
+        insertions = {}
+        appended = []
+        section = ""
+        for line in flavor_lines:
+            if not line.endswith("\n"):
+                line += "\n"
+            match = self.SECTION.match(line)
+            if match:
+                section = match.group("name")
+                if section not in ends:
+                    appended.append(line)
+                continue
+            if section not in ends:
+                appended.append(line)
+                continue
+            match = self.SETTING.match(line)
+            if not match:
+                continue
+            key = match.group("key")
+            if (section, key) in settings:
+                replacements[settings[(section, key)]] = line
+            else:
+                insertions.setdefault(ends[section], []).append(line)
+        merged = []
+        for index, line in enumerate(base_lines):
+            merged.extend(insertions.pop(index, []))
+            merged.append(replacements.get(index, line))
+        for index in sorted(insertions):
+            merged.extend(insertions[index])
+        merged.extend(appended)
+        with open(dest_file, 'w', encoding="utf-8") as f:
+            f.write("".join(merged))
+
     def merge_configs(self, base_file: str, flavor_file: str, dest_file: str) -> None:
         '''
         Merges one layer's file into the layer below it. YAML is merged
@@ -162,8 +234,10 @@ class Utils:
         extension = os.path.splitext(effective_name)[1]
         if extension in (".yaml", ".yml"):
             self.merge_yaml(base_file, flavor_file, dest_file)
-        elif extension == ".ini":
+        elif extension == ".ini" or effective_name in APPEND_FILES:
             self.append_file(base_file, flavor_file, dest_file)
+        elif extension in KEY_VALUE_EXTENSIONS:
+            self.merge_key_values(base_file, flavor_file, dest_file)
         else:
             shutil.copy(flavor_file, dest_file)
 
