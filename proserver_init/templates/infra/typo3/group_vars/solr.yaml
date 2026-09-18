@@ -18,5 +18,5 @@ oauth2_proxy:
       oidc_issuer_url:
       email_domains: []
       insecure_oidc_allow_unverified_email: true
-      scope: "openid profile email"
-      proxy_prefix: "/proserver/iap"
+      scope: openid profile email
+      proxy_prefix: /proserver/iap

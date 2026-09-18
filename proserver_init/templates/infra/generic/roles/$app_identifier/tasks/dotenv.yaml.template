@@ -17,7 +17,7 @@
 
 - name: Create webspace directory
   ansible.builtin.file:
-    path: "/var/www"
+    path: /var/www
     state: directory
     owner: proserver
     group: proserver

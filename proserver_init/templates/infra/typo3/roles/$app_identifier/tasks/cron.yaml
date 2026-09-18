@@ -8,9 +8,9 @@
 
 - name: Install the TYPO3 scheduler cronjob
   ansible.builtin.cron:
-    name: "Run TYPO3 scheduler"
+    name: Run TYPO3 scheduler
     hour: "*"
     minute: "*"
-    job: /usr/local/bin/php {{ vars.app.prefix.current_release }}/vendor/bin/typo3 scheduler:run
+    job: "/usr/local/bin/php {{ vars.app.prefix.current_release }}/vendor/bin/typo3 scheduler:run"
     user: proserver
     disabled: true

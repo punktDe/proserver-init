@@ -4,7 +4,7 @@ app:
   domain: ${app_identifier}.stg.${project_organization}.${domain_suffix}
   oauth2_proxy: main
   config:
-    encryption_key: '{{ secrets.${app_identifier}.stg.encryption_key }}'
+    encryption_key: "{{ secrets.${app_identifier}.stg.encryption_key }}"
     solr:
       host: "{{ groups.solr_stg | map('extract', hostvars) | map(attribute='solr.domain') | first }}"
       user: solr
@@ -30,4 +30,4 @@ dehydrated:
 mariadb:
   users:
     ${app_identifier}:
-      password: '{{ secrets.${app_identifier}.stg.mariadb.password }}'
+      password: "{{ secrets.${app_identifier}.stg.mariadb.password }}"

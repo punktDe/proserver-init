@@ -3,10 +3,9 @@ app:
   config:
     mysql:
       host: 127.0.0.1
-      database: '{{ mariadb.databases.${app_identifier}.name }}'
-      username: '{{ mariadb.users.${app_identifier}.username }}'
-      password: '{{ mariadb.users.${app_identifier}.password }}'
-
+      database: "{{ mariadb.databases.${app_identifier}.name }}"
+      username: "{{ mariadb.users.${app_identifier}.username }}"
+      password: "{{ mariadb.users.${app_identifier}.password }}"
 php:
   modules:
     disable:
@@ -27,5 +26,5 @@ oauth2_proxy:
       oidc_issuer_url:
       email_domains: []
       insecure_oidc_allow_unverified_email: true
-      scope: "openid profile email"
-      proxy_prefix: "/proserver/iap"
+      scope: openid profile email
+      proxy_prefix: /proserver/iap

@@ -14,6 +14,9 @@ class Utils:
     yaml.explicit_start = True
     yaml.indent(mapping=2, sequence=4, offset=2)
     yaml.width = 4096
+    # Without this, merging a file re-quotes every scalar in it, so the same
+    # value comes out differently depending on whether a layer touched it.
+    yaml.preserve_quotes = True
 
 
     @staticmethod
