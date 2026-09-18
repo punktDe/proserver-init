@@ -4,7 +4,7 @@ app:
   domain: ${app_identifier}.prd.${project_organization}.${domain_suffix}
   oauth2_proxy: main
   config:
-    encryption_key: "{{ secrets.${app_identifier}.prd.encryption_key }}"
+    encryption_key: "{{ secrets['${app_identifier}'].prd.encryption_key }}"
     solr:
       host: "{{ groups.solr_prd | map('extract', hostvars) | map(attribute='solr.domain') | first }}"
       user: solr
@@ -17,10 +17,10 @@ oauth2_proxy:
   config:
     main:
       client_id: ${project_organization}-${app_identifier}-prd
-      client_secret: "{{ secrets.${app_identifier}.prd.oauth2_proxy.client_secret }}"
-      cookie_secret: "{{ secrets.${app_identifier}.prd.oauth2_proxy.cookie_secret }}"
+      client_secret: "{{ secrets['${app_identifier}'].prd.oauth2_proxy.client_secret }}"
+      cookie_secret: "{{ secrets['${app_identifier}'].prd.oauth2_proxy.cookie_secret }}"
       htpasswd_file:
-        ${project_organization}: "{{ secrets.${app_identifier}.prd.oauth2_proxy.htpasswd_file.${project_organization} }}"
+        ${project_organization}: "{{ secrets['${app_identifier}'].prd.oauth2_proxy.htpasswd_file['${project_organization}'] }}"
 
 dehydrated:
   domains:
@@ -30,4 +30,4 @@ dehydrated:
 mariadb:
   users:
     ${app_identifier}:
-      password: "{{ secrets.${app_identifier}.prd.mariadb.password }}"
+      password: "{{ secrets['${app_identifier}'].prd.mariadb.password }}"

@@ -100,6 +100,10 @@ How a later layer combines with the one below it depends on the file:
   other instead of merging.
 - `values.yaml` at the root of a layer is not copied into the project. It
   supplies substitution values, and a later layer overrides them.
+- A substituted value used as a key inside a Jinja expression is subscripted,
+  `secrets['$app_identifier'].prd`, never `secrets.$app_identifier.prd`. Jinja
+  reads a hyphen in `foo.my-app` as a subtraction, so dotted access breaks for
+  any organization or application whose name contains one.
 - A `#@hosts` line marks where a later layer's inventory hosts go. Content
   above a flavor's own `#@hosts` line is placed there rather than appended, so
   a flavor's hosts sit with the other hosts while its groups stay at the

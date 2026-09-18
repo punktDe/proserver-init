@@ -3,9 +3,9 @@ app:
   config:
     mysql:
       host: 127.0.0.1
-      database: "{{ mariadb.databases.${app_identifier}.name }}"
-      username: "{{ mariadb.users.${app_identifier}.username }}"
-      password: "{{ mariadb.users.${app_identifier}.password }}"
+      database: "{{ mariadb.databases['${app_identifier}'].name }}"
+      username: "{{ mariadb.users['${app_identifier}'].username }}"
+      password: "{{ mariadb.users['${app_identifier}'].password }}"
 php:
   modules:
     disable:

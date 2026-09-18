@@ -3,4 +3,4 @@ elasticsearch:
   users:
     builtin:
       elastic:
-        password: "{{ secrets.${app_identifier}.prd.elasticsearch.elastic.password }}"
+        password: "{{ secrets['${app_identifier}'].prd.elasticsearch.elastic.password }}"
