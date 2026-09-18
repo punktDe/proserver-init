@@ -21,10 +21,10 @@ class Utils:
             if len(fail_description) > 0:
                 print(fail_description)
             if fail_if_not_installed:
-                print(f":error: [red]ERROR:[/red] {{ exec_name }} is not installed")
+                print(f":x: [red]ERROR:[/red] {exec_name} is not installed")
                 exit(1)
             else:
-                print(f":warning: [yellow]WARNING:[/yellow] {{ exec_name }} is not installed")
+                print(f":warning: [yellow]WARNING:[/yellow] {exec_name} is not installed")
                 return False
         else: 
             return True
