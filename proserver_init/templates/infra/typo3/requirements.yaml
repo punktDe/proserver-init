@@ -9,15 +9,6 @@ roles:
   - name: mariadb
     src: https://github.com/punktDe/ansible-proserver-mariadb
     version: 5.0.2
-  - name: oauth2_proxy
-    src: https://github.com/punktDe/ansible-proserver-oauth2-proxy
-    version: 2.0.4
-  - name: php
-    src: https://github.com/punktDe/ansible-proserver-php
-    version: 4.0.1
-  - name: redis
-    src: https://github.com/punktDe/ansible-proserver-redis
-    version: 1.0.2
   - name: solr
     src: https://github.com/punktDe/ansible-proserver-solr
     version: solrv10
