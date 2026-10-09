@@ -4,5 +4,5 @@
     src: nginx/http.d/${app_identifier}.conf.j2
     dest: "{{ nginx.prefix.config }}/http.d/${app_identifier}.conf"
     owner: root
-    mode: "0644"
+    mode: "0640"
   notify: Restart nginx

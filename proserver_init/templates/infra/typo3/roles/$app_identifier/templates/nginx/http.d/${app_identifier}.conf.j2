@@ -45,9 +45,7 @@ server {
     root {{ app.prefix.current_release }}/public;
     index index.php;
 
-    location ~ /\. {
-        deny all;
-    }
+    include {{ nginx.prefix.config }}/include/deny_hidden.conf;
 
     {% if app.oauth2_proxy -%}
     location /proserver/iap {

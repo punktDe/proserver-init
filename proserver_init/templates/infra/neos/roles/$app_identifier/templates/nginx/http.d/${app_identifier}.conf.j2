@@ -33,6 +33,7 @@ server {
     charset utf-8;
 
     include {{ nginx.prefix.config }}/include/security_headers.conf;
+    include {{ nginx.prefix.config }}/include/deny_hidden.conf;
 
     rewrite ^/neos$ /neos/ permanent;
 
