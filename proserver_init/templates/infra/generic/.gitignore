@@ -8,14 +8,21 @@ __pycache__
 /venv/
 debug.log
 id_ed25519*
+# Holds the Ansible Vault password in cleartext. An overlay that replaces it
+# with a secrets-manager script can drop this line.
+vault_password_file
 /venv*/
 .collections
 .ansible
-roles/apache
+# roles/apache is an empty placeholder, not an installed role: the solr
+# role lists apache as a dependency, and Ansible resolves dependency role
+# names when it parses the playbook even when their `when:` is false. As
+# long as no host is in the [apache] group, the role never executes.
+roles/apache/*
+!roles/apache/.gitkeep
 roles/dehydrated
 roles/elasticsearch
 roles/mail
-roles/mailhog
 roles/mariadb
 roles/nginx
 roles/oauth2_proxy
@@ -28,3 +35,4 @@ roles/system
 roles/zabbix_agent
 roles/varnish
 roles/docker
+roles/mailpit

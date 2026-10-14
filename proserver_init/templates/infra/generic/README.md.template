@@ -2,16 +2,15 @@
 
 ### Preparing your system
 ```sh
-brew install direnv bitwarden-cli pre-commit
-bw config server pass.punkt.de
-bw login
-echo 'export BW_SESSION="your-session-key" >> ~/.zshrc'
-source ~/.zshrc
+brew install $brew_packages
 ```
+
+### The Ansible Vault password
+$vault_password_instructions
 
 ### Cloning the repository
 ```sh
-git clone git@git.punkt.de:$project_organization/$project_name.git ~/Workspace/Projects/$project_name
+git clone $git_remote/$project_name.git ~/Workspace/Projects/$project_name
 cd ~/Workspace/Projects/$project_name
 ```
 
@@ -27,13 +26,11 @@ pre-commit install
 
 ### Run Ansible playbook
 ```sh
-ansible-playbook $project_organization.yaml --limit staging
+ansible-playbook $playbook_filename --limit staging
 ```
 
 ### Environment variables
-Unlike some other Punkt.de projects, this Ansible playbook doesn't utilize a separate app.env template.
-
-Instead, values are taken from `app.config` dictionary, and are transformed using a filter plugin.
+Values are taken from `app.config` dictionary, and are transformed using a filter plugin.
 
 As a result, this configuration...
 
@@ -59,10 +56,9 @@ In the above example, `redis.host` becomes `REDIS_HOST`, and `redis.port` become
 The dictionary keys can be nested infinitely, and the filter plugin also has no effect on variables that already contain underscores.
 
 ### Deployments
-To test the infrastructure deployment, create a **merge request** against the main branch.
+This boilerplate ships without a CI configuration. Add the pipeline your
+organization uses, and have it run:
 
-To deploy to staging, merge to the main branch.
-
-To deploy to production, create a **tag**.
-
-Additionally, every commit triggers a lint check and a `--check --diff` playbook run.
+```sh
+ansible-playbook $playbook_filename --limit production
+```

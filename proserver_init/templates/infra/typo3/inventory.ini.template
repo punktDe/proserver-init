@@ -1,0 +1,46 @@
+[solr_prd]
+solr.prd.${project_organization}.${domain_suffix} ansible_user=vpro0002
+
+[solr_stg]
+solr.stg.${project_organization}.${domain_suffix} ansible_user=vpro0003
+
+#@hosts
+
+[solr]
+[solr:children]
+solr_stg
+solr_prd
+
+[mariadb]
+[mariadb:children]
+${app_identifier}
+
+[mailpit]
+[mailpit:children]
+${app_identifier}
+
+[oauth2proxy]
+[oauth2proxy:children]
+${app_identifier}
+solr
+
+# [nginx] exists so that the solr role picks its nginx branch over its
+# apache branch: it checks whether the host is in groups.nginx. It is not
+# a census of nginx hosts - the ${app_identifier} hosts run nginx too, via the
+# ${app_identifier} role, and are deliberately not listed here.
+[nginx]
+[nginx:children]
+solr
+
+[apache]
+
+# The solr hosts join the environment and secrets groups, so that they see
+# environment_name_abbrev and the vault.
+[production:children]
+solr_prd
+
+[staging:children]
+solr_stg
+
+[secrets:children]
+solr

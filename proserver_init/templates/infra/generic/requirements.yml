@@ -1,0 +1,31 @@
+---
+collections:
+  - name: https://github.com/ansible-collections/community.general
+    type: git
+  - name: https://github.com/ansible-collections/community.crypto
+    type: git
+  - name: https://github.com/ansible-collections/ansible.posix
+    type: git
+
+roles:
+  - name: dehydrated
+    src: https://github.com/punktDe/ansible-proserver-dehydrated
+    version: 2.0.6
+  - name: nginx
+    src: https://github.com/punktDe/ansible-proserver-nginx
+    version: 4.0.0
+  - name: system
+    src: https://github.com/punktDe/ansible-proserver-system
+    version: 3.1.0
+  # Dependencies of the app role, see roles/$app_identifier/meta/main.yml.
+  # Ansible resolves dependency role names when it parses the playbook, even
+  # for a dependency whose `when:` is false, so they all have to be installed.
+  - name: oauth2_proxy
+    src: https://github.com/punktDe/ansible-proserver-oauth2-proxy
+    version: 2.0.4
+  - name: php
+    src: https://github.com/punktDe/ansible-proserver-php
+    version: 4.0.1
+  - name: redis
+    src: https://github.com/punktDe/ansible-proserver-redis
+    version: 1.0.2

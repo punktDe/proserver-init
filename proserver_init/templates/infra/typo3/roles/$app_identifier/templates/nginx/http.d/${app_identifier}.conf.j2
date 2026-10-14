@@ -1,0 +1,122 @@
+server {
+    listen 0.0.0.0:80;
+    listen [::]:80;
+    {% if ansible_local.proserver | default(none) and ansible_local.proserver.routing.with_gate64 -%}
+    listen [::1]:87 proxy_protocol;
+    {%- endif %}
+
+    server_name {{ app.domain }};
+
+    root /var/null;
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+
+    include {{ nginx.prefix.config }}/include/letsencrypt.conf;
+}
+
+server {
+    listen 0.0.0.0:443 ssl;
+    listen [::]:443 ssl;
+    {% if ansible_local.proserver | default(none) and ansible_local.proserver.routing.with_gate64 -%}
+    listen [::1]:57 ssl proxy_protocol;
+    {%- endif %}
+    http2 on;
+
+    server_name {{ app.domain }};
+
+
+    ############################################################################
+    # Headers
+    ############################################################################
+    charset utf-8;
+    include {{ nginx.prefix.config }}/include/security_headers.conf;
+    add_header X-Request-ID $ensure_request_id always;
+
+    ############################################################################
+    # Limits
+    ############################################################################
+    client_max_body_size {{ nginx.client_max_body_size }};
+
+    ############################################################################
+    # Routing
+    ############################################################################
+    root {{ app.prefix.current_release }}/public;
+    index index.php;
+
+    include {{ nginx.prefix.config }}/include/deny_hidden.conf;
+
+    {% if app.oauth2_proxy -%}
+    location /proserver/iap {
+      proxy_pass http://[::1]:{{ oauth2_proxy.config[app.oauth2_proxy].http_address.split(":")[-1] }};
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Scheme $scheme;
+      proxy_set_header X-Auth-Request-Redirect $request_uri;
+    }
+
+    location = /proserver/iap/auth {
+      proxy_pass http://[::1]:{{ oauth2_proxy.config[app.oauth2_proxy].http_address.split(":")[-1] }};
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Scheme $scheme;
+      proxy_set_header Content-Length "";
+      proxy_pass_request_body off;
+    }
+    {% endif %}
+
+    location / {
+        port_in_redirect off;
+        {% macro oauth2_proxy() %}
+        {% if app.oauth2_proxy -%}
+
+        include {{ nginx.prefix.config }}/include/security_headers.conf;
+        auth_request /proserver/iap/auth;
+        error_page 401 = /proserver/iap/sign_in;
+        auth_request_set $auth_cookie $upstream_http_set_cookie;
+        add_header Set-Cookie $auth_cookie;
+
+        allow 127.0.0.1/32;
+        allow ::1/128;
+
+        deny all;
+
+        satisfy any;
+        {% endif %}
+        {% endmacro %}
+        {{ oauth2_proxy() }}
+
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+
+   location /typo3/ {
+       absolute_redirect off;
+       try_files $uri /index.php$is_args$args;
+   }
+
+    ############################################################################
+    # Interpreters
+    ############################################################################
+    location ~ \.php$ {
+        {{ oauth2_proxy() }}
+
+        try_files $uri =404;
+        include {{ nginx.prefix.config }}/fastcgi_params;
+        fastcgi_index index.php;
+        fastcgi_split_path_info ^(.+\.php)(.*)$;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param TYPO3_CONTEXT {{ app.context }};
+        fastcgi_pass unix:/var/run/php-fpm/php-fpm.socket;
+    }
+
+    ############################################################################
+    # HTTPS
+    ############################################################################
+    ssl_certificate {{ dehydrated|cert_fullchain(app.domain) }};
+    ssl_certificate_key {{ dehydrated|cert_privkey(app.domain) }};
+    ssl_trusted_certificate {{ dehydrated|cert_chain(app.domain) }};
+    include {{ nginx.prefix.config }}/include/https_params.conf;
+}

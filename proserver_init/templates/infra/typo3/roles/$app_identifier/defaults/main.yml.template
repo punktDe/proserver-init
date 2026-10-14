@@ -1,0 +1,22 @@
+---
+app:
+  config:
+    encryption_key:
+    mysql:
+      host: 127.0.0.1
+      database:
+      username:
+      password:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+    mail:
+      transport: smtp
+      host:
+      port:
+      username:
+      password:
+    solr:
+      host:
+      user:
+      password:

@@ -1,0 +1,24 @@
+---
+# Substitution values for the templates in this layer. An overlay can
+# override any of them from its own values.yaml without restating the
+# files that use them.
+
+# Where the generated project is cloned from, used in the README.
+git_remote: git@github.com:your-organization
+
+# DNS suffix the generated inventory and certificates use.
+domain_suffix: example.com
+
+# Packages the README tells a new contributor to install.
+brew_packages: direnv pre-commit
+
+# What the README says about the Ansible Vault password. An overlay that
+# reads the password from a secrets manager replaces this with its own
+# instructions.
+vault_password_instructions: |-
+  A random Ansible Vault password was generated into `vault_password_file`.
+  That file is git-ignored: share the password through your team's secrets
+  manager, and have every contributor put it there before running Ansible.
+
+  To read the password from a secrets manager instead, replace the file with
+  an executable script that prints the password on stdout.
