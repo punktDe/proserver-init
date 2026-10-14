@@ -8,8 +8,8 @@ infrastructure_success = """
   To read the password from a secrets manager instead, replace the file with an
   executable script that prints the password on stdout.
 
-* Fill in `group_vars/secrets.yaml` and encrypt it before committing:
-  `ansible-vault encrypt group_vars/secrets.yaml`
+* Fill in `group_vars/secrets.yml` and encrypt it before committing:
+  `ansible-vault encrypt group_vars/secrets.yml`
 """
 
 direnv_not_installed = f"""

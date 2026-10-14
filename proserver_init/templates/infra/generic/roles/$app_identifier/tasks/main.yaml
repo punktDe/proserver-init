@@ -1,3 +1,0 @@
----
-- name: Handle the .env file
-  ansible.builtin.include_tasks: dotenv.yaml

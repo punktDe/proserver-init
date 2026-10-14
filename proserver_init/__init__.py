@@ -15,7 +15,7 @@ def main():
     parser_infra = subparsers.add_parser('infra', help='')
     parser_infra.add_argument('-f', '--flavor', choices=InfraScaffolding.available_flavors(FROM_PATH), help='flavor of the project', required=False, default=None)
     parser_infra.add_argument('-a', '--app-identifier', type=str, help='name of the application, used for the role, its groups and its variables', dest='app_identifier', required=False, default='app')
-    parser_infra.add_argument('--playbook-filename', type=str, help='file name of the generated playbook', dest='playbook_filename', required=False, default='playbook.yaml')
+    parser_infra.add_argument('--playbook-filename', type=str, help='file name of the generated playbook', dest='playbook_filename', required=False, default='playbook.yml')
     parser_infra_role = subparsers.add_parser('infra-role', help='')
     args = parser.parse_args()
     if args.project_type == "infra" and not "-infrastructure" in args.project_dir:

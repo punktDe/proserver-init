@@ -64,7 +64,7 @@ class InfraScaffolding:
         return layers
 
     def init_project(self, from_path, to_path, flavor = None, app_identifier = "app",
-                     playbook_filename = "playbook.yaml", overlay_root = None):
+                     playbook_filename = "playbook.yml", overlay_root = None):
         project_name = os.path.split(to_path)[1]
         project_organization = project_name.replace("-infrastructure", "")
         config = {

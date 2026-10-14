@@ -55,7 +55,7 @@ exactly when templates exist for it.
 | --- | --- | --- |
 | `-f`, `--flavor` | none | Application stack to layer on top of the generic templates |
 | `-a`, `--app-identifier` | `app` | Name of the application |
-| `--playbook-filename` | `playbook.yaml` | File name of the generated playbook |
+| `--playbook-filename` | `playbook.yml` | File name of the generated playbook |
 
 The app identifier names the application everywhere it appears on disk and in
 the inventory: the role in `roles/<identifier>`, the inventory groups
@@ -91,13 +91,17 @@ How a later layer combines with the one below it depends on the file:
 ### Template conventions
 
 - `$variable` and `${variable}` in a **path** are substituted, so a template at
-  `roles/$app_identifier/tasks/main.yaml` lands under the name the project uses.
-  Use the braced form before an underscore: `${app_identifier}_prd.yaml`.
+  `roles/$app_identifier/tasks/main.yml` lands under the name the project uses.
+  Use the braced form before an underscore: `${app_identifier}_prd.yml`.
 - A file whose name contains `template` also has its **contents** substituted,
   and loses the `.template` suffix on the way out.
 - A file must be named the same way in every layer, `.template` suffix included.
   Two layers disagreeing about the suffix produce two files that overwrite each
   other instead of merging.
+- Ansible files use the `.yml` extension, the one Ansible tooling expects for
+  its fixed file names (`requirements.yml`, `molecule.yml`). An overlay file
+  named `.yaml` does not merge with the public `.yml` template but lands next to
+  it. Only `.pre-commit-config.yaml` and `values.yaml` keep `.yaml`.
 - `values.yaml` at the root of a layer is not copied into the project. It
   supplies substitution values, and a later layer overrides them.
 - A substituted value used as a key inside a Jinja expression is subscripted,
@@ -120,8 +124,8 @@ my-overlay/
   infra/generic/ansible.cfg            # just the settings it changes
   infra/generic/.gitignore             # just the lines it adds
   infra/generic/inventory.py           # a file the public templates do not have
-  infra/generic/group_vars/all.yaml    # merged into the public group_vars/all.yaml
-  infra/typo3/group_vars/${app_identifier}.yaml.template
+  infra/generic/group_vars/all.yml     # merged into the public group_vars/all.yml
+  infra/typo3/group_vars/${app_identifier}.yml.template
 ```
 
 Every one of those is a delta. No file in an overlay restates the public
@@ -179,7 +183,7 @@ under `templates/infra` shows up as a flavor on the next run. Only a change to
 repeating.
 
 Generating a project is not a dry run. It writes the target directory, sources
-its `.envrc`, installs the Ansible roles named in its `requirements.yaml`, and
+its `.envrc`, installs the Ansible roles named in its `requirements.yml`, and
 runs `git init` and `pre-commit install` in it, so point `-p` at a throwaway
 directory. The name has to end in `-infrastructure`, and the part before that
 becomes the organization name.

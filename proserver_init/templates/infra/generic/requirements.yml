@@ -17,7 +17,7 @@ roles:
   - name: system
     src: https://github.com/punktDe/ansible-proserver-system
     version: 3.1.0
-  # Dependencies of the app role, see roles/$app_identifier/meta/main.yaml.
+  # Dependencies of the app role, see roles/$app_identifier/meta/main.yml.
   # Ansible resolves dependency role names when it parses the playbook, even
   # for a dependency whose `when:` is false, so they all have to be installed.
   - name: oauth2_proxy

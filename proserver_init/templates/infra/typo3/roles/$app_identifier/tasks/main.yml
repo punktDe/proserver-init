@@ -1,0 +1,9 @@
+---
+- name: Manage the app folder
+  ansible.builtin.include_tasks: app.yml
+
+- name: Manage the app cronjobs
+  ansible.builtin.include_tasks: cron.yml
+
+- name: Manage the nginx config
+  ansible.builtin.include_tasks: nginx.yml

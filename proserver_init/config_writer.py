@@ -83,7 +83,7 @@ class ConfigWriter:
     def substitute_path(self, relative_file_path: str) -> str:
         '''
         Substitutes the configuration into the path itself, so that a
-        template can live at roles/$app_identifier/tasks/main.yaml and
+        template can live at roles/$app_identifier/tasks/main.yml and
         land under the name the project actually uses. Applied while the
         layers are merged, so that two layers naming the same file agree
         on it and the merge rule sees the final extension.
