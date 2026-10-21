@@ -1,0 +1,17 @@
+---
+dehydrated:
+  domains:
+    solr.stg.${project_organization}.${domain_suffix}: []
+
+solr:
+  domain: solr.stg.${project_organization}.${domain_suffix}
+
+oauth2_proxy:
+  config:
+    solr:
+      # The same client as the application, so the same secret.
+      client_id: ${project_organization}-${app_identifier}-stg
+      client_secret: "{{ secrets['${app_identifier}'].stg.oauth2_proxy.client_secret }}"
+      cookie_secret: "{{ secrets['solr'].stg.oauth2_proxy.cookie_secret }}"
+      htpasswd_file:
+        solr: "{{ secrets['solr'].stg.oauth2_proxy.htpasswd_file['solr'] }}"

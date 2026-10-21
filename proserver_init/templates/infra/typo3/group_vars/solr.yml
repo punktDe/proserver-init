@@ -1,0 +1,22 @@
+---
+ansible_python_interpreter: /usr/local/bin/python3
+
+solr:
+  oauth2_proxy: solr
+  version: 10.0.0
+  nginx:
+    client_max_body_size: 100M
+  heap: 4g
+
+oauth2_proxy:
+  config:
+    solr:
+      http_address: "[::1]:4190"
+      # Set the identity provider your organization uses, for example
+      # keycloak-oidc, google or github, together with its issuer URL.
+      provider:
+      oidc_issuer_url:
+      email_domains: []
+      insecure_oidc_allow_unverified_email: true
+      scope: openid profile email
+      proxy_prefix: /proserver/iap

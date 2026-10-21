@@ -1,0 +1,9 @@
+
+- name: Solr
+  hosts: solr
+  become: yes
+  tags:
+    - solr
+  roles:
+    - oauth2_proxy
+    - solr
