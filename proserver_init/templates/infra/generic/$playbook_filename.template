@@ -1,0 +1,16 @@
+---
+- name: System
+  hosts: all
+  become: yes
+  tags:
+    - system
+  roles:
+    - system
+
+- name: ${app_identifier_title}
+  hosts: ${app_identifier}
+  become: yes
+  tags:
+    - ${app_identifier}
+  roles:
+    - ${app_identifier}

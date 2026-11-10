@@ -1,0 +1,9 @@
+---
+app:
+  context:
+  domain:
+  oauth2_proxy:
+  prefix:
+    config: /usr/local/etc
+    current_release: /var/www/${app_identifier}/current
+  config:

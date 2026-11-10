@@ -1,0 +1,30 @@
+---
+ansible_python_interpreter: /usr/local/bin/python3
+
+solr:
+  oauth2_proxy: solr
+  version: 10.0.0
+  nginx:
+    client_max_body_size: 100M
+  heap: 4g
+  # Deploys the Solr server files of EXT:solr and creates its cores.
+  # Keep version in sync with the EXT:solr release the TYPO3 project has
+  # installed (composer show apache-solr-for-typo3/solr).
+  ext_solr:
+    enabled: yes
+    version: 14.0.2
+    cores:
+      core_de: german
+
+oauth2_proxy:
+  config:
+    solr:
+      http_address: "[::1]:4190"
+      # Set the identity provider your organization uses, for example
+      # keycloak-oidc, google or github, together with its issuer URL.
+      provider:
+      oidc_issuer_url:
+      email_domains: []
+      insecure_oidc_allow_unverified_email: true
+      scope: openid profile email
+      proxy_prefix: /proserver/iap

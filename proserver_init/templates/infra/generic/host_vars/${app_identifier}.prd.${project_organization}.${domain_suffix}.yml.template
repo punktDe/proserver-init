@@ -1,0 +1,9 @@
+---
+dehydrated:
+  do_not_renew:
+    vpro0000.proserver.punkt.de: yes
+
+system:
+  users:
+    vpro0000:
+      authorized_keys: "{{ authorized_keys_operations }}"

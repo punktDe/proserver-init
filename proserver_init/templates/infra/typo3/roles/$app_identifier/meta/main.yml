@@ -1,0 +1,5 @@
+---
+dependencies:
+  - role: supervisord
+  - role: mariadb
+  - role: mailpit

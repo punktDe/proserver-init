@@ -1,0 +1,4 @@
+---
+# SSH keys of the people who operate these machines. Referenced from
+# host_vars, so that every host grants the same set of operators.
+authorized_keys_operations: {}

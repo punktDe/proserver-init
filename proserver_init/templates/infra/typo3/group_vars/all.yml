@@ -1,0 +1,7 @@
+---
+# Handled by the system role rather than by a task of our own.
+system:
+  sudoers:
+    proserver: |
+      proserver ALL = NOPASSWD: /usr/local/etc/rc.d/php-fpm
+      proserver ALL = NOPASSWD: /usr/local/etc/rc.d/php_fpm
