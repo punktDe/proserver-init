@@ -7,6 +7,14 @@ solr:
   nginx:
     client_max_body_size: 100M
   heap: 4g
+  # Deploys the Solr server files of EXT:solr and creates its cores.
+  # Keep version in sync with the EXT:solr release the TYPO3 project has
+  # installed (composer show apache-solr-for-typo3/solr).
+  ext_solr:
+    enabled: yes
+    version: 14.0.2
+    cores:
+      core_de: german
 
 oauth2_proxy:
   config:
